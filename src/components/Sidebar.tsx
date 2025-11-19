@@ -43,7 +43,7 @@ export default function Sidebar({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         {isSidebarOpen && (
-          <span className="font-semibold text-blue-900 text-lg">Fuchibola</span>
+          <span className="font-semibold text-blue-900 text-lg">EMaster Fuchiboli</span>
         )}
 
         <button onClick={toggleSidebar} className="hover:bg-gray-100 p-2 rounded-lg">
