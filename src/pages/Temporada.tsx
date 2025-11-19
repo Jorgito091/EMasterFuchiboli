@@ -1,0 +1,10 @@
+export default function Temporada() {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-semibold text-blue-900">Temporada</h2>
+      <div className="bg-white rounded-xl p-6 border border-blue-100">
+        <p className="text-gray-600">Tu temporada está en marcha</p>
+      </div>
+    </div>
+  );
+}
