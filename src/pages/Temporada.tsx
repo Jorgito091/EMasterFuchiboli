@@ -75,7 +75,7 @@ export default function Temporada() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-blue-900">Temporada</h2>
+      <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-400">Temporada</h2>
 
       {/* Información de la temporada actual */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
@@ -93,9 +93,9 @@ export default function Temporada() {
             <p className="text-blue-100 text-sm">
               {temporadaActual.fechaInicio} - {temporadaActual.fechaFin}
             </p>
-            <div className="mt-2 bg-white bg-opacity-20 rounded-full h-2 w-48">
+            <div className="mt-2 bg-white dark:bg-slate-800 bg-opacity-20 rounded-full h-2 w-48">
               <div
-                className="bg-white rounded-full h-2"
+                className="bg-white dark:bg-slate-800 rounded-full h-2"
                 style={{
                   width: `${
                     (temporadaActual.jornada /
@@ -117,12 +117,12 @@ export default function Temporada() {
           return (
             <div
               key={index}
-              className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-gray-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm mb-1">{stat.label}</p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">{stat.label}</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                     {stat.valor}
                   </p>
                 </div>
@@ -136,7 +136,7 @@ export default function Temporada() {
       </div>
 
       {/* Próximos Partidos */}
-      <div className="bg-white rounded-xl border border-blue-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4">
           <h3 className="text-xl font-bold">Próximos Partidos</h3>
         </div>
@@ -144,28 +144,28 @@ export default function Temporada() {
           {proximosPartidos.map((partido) => (
             <div
               key={partido.id}
-              className="p-6 hover:bg-blue-50 transition-colors"
+              className="p-6 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-4 mb-2">
-                    <span className="text-lg font-semibold text-gray-900">
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                       {partido.local}
                     </span>
                     <span className="text-gray-500 font-bold">vs</span>
-                    <span className="text-lg font-semibold text-gray-900">
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                       {partido.visitante}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     📍 {partido.estadio}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {partido.fecha}
                   </p>
-                  <p className="text-sm text-gray-600">{partido.hora}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{partido.hora}</p>
                 </div>
               </div>
             </div>

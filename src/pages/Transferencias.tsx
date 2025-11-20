@@ -69,14 +69,14 @@ export default function Transferencias() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-blue-900">Transferencias</h2>
+      <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-400">Transferencias</h2>
 
       {/* Resumen */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl p-6 border border-red-200 shadow-sm">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-red-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-sm mb-1">Total Compras</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Total Compras</p>
               <p className="text-2xl font-bold text-red-600">
                 {formatCurrency(totalCompras)}
               </p>
@@ -87,10 +87,10 @@ export default function Transferencias() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 border border-green-200 shadow-sm">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-green-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-sm mb-1">Total Ventas</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Total Ventas</p>
               <p className="text-2xl font-bold text-green-600">
                 {formatCurrency(totalVentas)}
               </p>
@@ -101,10 +101,10 @@ export default function Transferencias() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 border border-blue-200 shadow-sm">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-blue-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-sm mb-1">Balance</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Balance</p>
               <p className={`text-2xl font-bold ${balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {formatCurrency(Math.abs(balance))}
               </p>
@@ -117,7 +117,7 @@ export default function Transferencias() {
       </div>
 
       {/* Lista de transferencias */}
-      <div className="bg-white rounded-xl border border-blue-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4">
           <h3 className="text-xl font-bold">Historial de Transferencias</h3>
         </div>
@@ -125,14 +125,14 @@ export default function Transferencias() {
           {transferencias.map((transferencia) => (
             <div
               key={transferencia.id}
-              className="p-6 hover:bg-blue-50 transition-colors"
+              className="p-6 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="text-lg font-bold text-gray-900 mb-2">
+                  <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                     {transferencia.jugador}
                   </h4>
-                  <div className="flex items-center gap-3 text-gray-700">
+                  <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                     <span className="font-medium">
                       {transferencia.equipoOrigen}
                     </span>
@@ -153,7 +153,7 @@ export default function Transferencias() {
                     {transferencia.tipo === "Compra" ? "-" : "+"}
                     {formatCurrency(transferencia.monto)}
                   </p>
-                  <p className="text-sm text-gray-600">{transferencia.fecha}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{transferencia.fecha}</p>
                   <span
                     className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold ${
                       transferencia.tipo === "Compra"

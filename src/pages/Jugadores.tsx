@@ -133,7 +133,7 @@ export default function Jugadores() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-blue-900">
+        <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-400">
           Gestión de Jugadores
         </h2>
         <button
@@ -146,7 +146,7 @@ export default function Jugadores() {
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm">
         <div className="relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -157,13 +157,13 @@ export default function Jugadores() {
             placeholder="Buscar por nombre, equipo o posición..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
           />
         </div>
       </div>
 
       {/* Players Table */}
-      <div className="bg-white rounded-xl border border-blue-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
@@ -211,26 +211,26 @@ export default function Jugadores() {
                 filteredPlayers.map((player, index) => (
                   <tr
                     key={player.id}
-                    className={`hover:bg-blue-50 transition-colors ${
-                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors ${
+                      index % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-gray-50 dark:bg-slate-700"
                     }`}
                   >
-                    <td className="px-4 py-3 text-sm font-bold text-blue-900">
+                    <td className="px-4 py-3 text-sm font-bold text-blue-900 dark:text-blue-400">
                       {player.dorsal}
                     </td>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">
                       {player.nombre}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
                       {player.posicion}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
                       {player.edad}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
                       {player.nacionalidad}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
                       {player.equipo}
                     </td>
                     <td className="px-4 py-3 text-sm text-green-600 font-medium">
@@ -268,7 +268,7 @@ export default function Jugadores() {
       {/* Modal for Add/Edit Player */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
               <h3 className="text-2xl font-bold">
                 {editingPlayer ? "Editar Jugador" : "Nuevo Jugador"}
@@ -284,7 +284,7 @@ export default function Jugadores() {
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Nombre *
                   </label>
                   <input
@@ -293,13 +293,13 @@ export default function Jugadores() {
                     onChange={(e) =>
                       setFormData({ ...formData, nombre: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                     placeholder="Ej: Lionel Messi"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Posición *
                   </label>
                   <select
@@ -307,7 +307,7 @@ export default function Jugadores() {
                     onChange={(e) =>
                       setFormData({ ...formData, posicion: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                   >
                     <option value="">Seleccionar posición</option>
                     {posiciones.map((pos) => (
@@ -319,7 +319,7 @@ export default function Jugadores() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Edad *
                   </label>
                   <input
@@ -331,13 +331,13 @@ export default function Jugadores() {
                         edad: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                     placeholder="Ej: 25"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Dorsal *
                   </label>
                   <input
@@ -349,13 +349,13 @@ export default function Jugadores() {
                         dorsal: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                     placeholder="Ej: 10"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Nacionalidad *
                   </label>
                   <input
@@ -367,13 +367,13 @@ export default function Jugadores() {
                         nacionalidad: e.target.value,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                     placeholder="Ej: Argentina"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Equipo *
                   </label>
                   <input
@@ -382,13 +382,13 @@ export default function Jugadores() {
                     onChange={(e) =>
                       setFormData({ ...formData, equipo: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                     placeholder="Ej: Barcelona"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Valor (€) *
                   </label>
                   <input
@@ -400,13 +400,13 @@ export default function Jugadores() {
                         valor: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                     placeholder="Ej: 50000000"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Salario (€) *
                   </label>
                   <input
@@ -418,7 +418,7 @@ export default function Jugadores() {
                         salario: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
                     placeholder="Ej: 10000000"
                   />
                 </div>
@@ -433,7 +433,7 @@ export default function Jugadores() {
                 </button>
                 <button
                   onClick={handleCloseModal}
-                  className="flex-1 bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold"
+                  className="flex-1 bg-gray-300 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold"
                 >
                   Cancelar
                 </button>

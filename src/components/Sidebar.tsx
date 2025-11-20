@@ -39,15 +39,15 @@ export default function Sidebar({
     <div
       className={`${
         isSidebarOpen ? "w-64" : "w-16"
-      } bg-white border-r border-gray-200 flex flex-col transition-all duration-300`}
+      } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 flex flex-col transition-all duration-300`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700">
         {isSidebarOpen && (
-          <span className="font-semibold text-blue-900 text-lg">EMaster Fuchiboli</span>
+          <span className="font-semibold text-blue-900 dark:text-blue-400 text-lg">EMaster Fuchiboli</span>
         )}
 
-        <button onClick={toggleSidebar} className="hover:bg-gray-100 p-2 rounded-lg">
+        <button onClick={toggleSidebar} className="hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded-lg text-gray-700 dark:text-gray-300">
           {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
@@ -64,8 +64,8 @@ export default function Sidebar({
               onClick={() => setActivePage(item.id)}
               className={`flex items-center w-full gap-3 p-2 rounded-lg transition ${
                 active
-                  ? "bg-blue-900 text-white"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-blue-900 dark:bg-blue-600 text-white"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800"
               }`}
             >
               <Icon size={18} />
@@ -76,8 +76,8 @@ export default function Sidebar({
       </div>
 
       {/* Logout */}
-      <div className="p-3 border-t border-gray-200">
-        <button className="flex items-center gap-2 text-gray-600 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg w-full justify-center">
+      <div className="p-3 border-t border-gray-200 dark:border-slate-700">
+        <button className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 rounded-lg w-full justify-center">
           <LogOut size={18} />
           {isSidebarOpen && <span>Cerrar Sesión</span>}
         </button>

@@ -36,7 +36,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -45,7 +45,7 @@ function App() {
         navItems={navItems}
       />
 
-      <main className="flex-1 p-6 bg-white border-l border-gray-300">
+      <main className="flex-1 p-6 bg-white dark:bg-slate-800 border-l border-gray-300 dark:border-slate-700">
         {pages[activePage]}
       </main>
     </div>

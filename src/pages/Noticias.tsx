@@ -45,7 +45,7 @@ export default function Noticias() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-blue-900">Noticias</h2>
+      <h2 className="text-2xl font-semibold text-blue-900 dark:text-blue-400">Noticias</h2>
 
       <AnimatePresence mode="wait">
         {/* LISTA DE NOTICIAS */}
@@ -56,14 +56,14 @@ export default function Noticias() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 50, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="bg-white rounded-xl border border-blue-100 shadow-sm p-4"
+            className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm p-4"
           >
             <ul className="space-y-4">
               {noticias.map((n) => (
                 <li
                   key={n.id}
                   onClick={() => setSelectedNew(n)}
-                  className="p-4 border rounded-xl cursor-pointer hover:bg-gray-100 transition flex items-center space-x-4"
+                  className="p-4 border rounded-xl cursor-pointer hover:bg-gray-100 dark:bg-slate-700 transition flex items-center space-x-4"
                 >
                   <img
                     src={n.bannerSm}
@@ -75,7 +75,7 @@ export default function Noticias() {
                     <h3 className="text-lg font-semibold text-blue-800">
                       {n.titulo}
                     </h3>
-                    <p className="text-gray-600 text-sm">{n.descripcion}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">{n.descripcion}</p>
                   </div>
                 </li>
               ))}
@@ -92,7 +92,7 @@ export default function Noticias() {
             exit={{ x: -50, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="
-                bg-white rounded-xl border border-blue-100 shadow-sm p-6 relative
+                bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm p-6 relative
                 min-h-[80vh] max-h-[80vh] overflow-y-auto pr-4
             "
           >
@@ -124,11 +124,11 @@ export default function Noticias() {
               />
             </div>
 
-            <h2 className="text-2xl font-bold text-blue-900 mb-4">
+            <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-400 mb-4">
               {selectedNew.titulo}
             </h2>
 
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
               {selectedNew.contenido}
             </p>
           </motion.div>
