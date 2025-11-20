@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface Noticia {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  contenido: string;
+  bannerLg: string;
+  bannerSm: string;
+}
+
 export default function Noticias() {
-  const [selectedNew, setSelectedNew] = useState(null);
+  const [selectedNew, setSelectedNew] = useState<Noticia | null>(null);
 
   const noticias = [
     {

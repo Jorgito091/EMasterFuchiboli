@@ -22,7 +22,7 @@ function App() {
     { id: "configuracion", label: "Configuración" },
   ];
 
-  const pages: Record<string, JSX.Element> = {
+  const pages: Record<string, React.ReactElement> = {
     temporada: <Temporada />,
     equipos: <Equipos />,
     jugadores: <Jugadores />,

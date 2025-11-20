@@ -26,7 +26,7 @@ export default function SidebarItem({
           : "text-gray-600 hover:bg-gray-100 hover:text-blue-900"
       }`}
     >
-      <Icon size={18} className={isActive ? "text-white" : "text-gray-500"} />
+      <Icon width={18} height={18} className={isActive ? "text-white" : "text-gray-500"} />
       {isSidebarOpen && <span className="text-sm font-medium">{label}</span>}
     </button>
   );
