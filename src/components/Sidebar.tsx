@@ -9,6 +9,7 @@ import {
   X,
   LogOut,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -18,7 +19,7 @@ interface SidebarProps {
   navItems: { id: string; label: string }[];
 }
 
-const icons: Record<string, any> = {
+const icons: Record<string, LucideIcon> = {
   temporada: Calendar,
   equipos: Users,
   jugadores: User,
