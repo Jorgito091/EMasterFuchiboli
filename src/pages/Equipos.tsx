@@ -1,41 +1,16 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getEquipos } from "../services/equipos";
+import type { Equipo } from "../services/auth";
 
 export default function Equipos() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const equipos = [
-    {
-      id: 1,
-      imagen: "https://cdn-icons-png.flaticon.com/512/905/905341.png",
-      nombre: "Real Madrid",
-      jugadores: 25,
-      costoPlantilla: 850000000,
-      dineroInicial: 100000000,
-      ingresos: 45000000,
-      dineroFinal: 145000000,
-    },
-    {
-      id: 2,
-      imagen: "https://cdn-icons-png.flaticon.com/512/905/905341.png",
-      nombre: "Barcelona",
-      jugadores: 26,
-      costoPlantilla: 780000000,
-      dineroInicial: 95000000,
-      ingresos: 42000000,
-      dineroFinal: 137000000,
-    },
-    {
-      id: 3,
-      imagen: "https://cdn-icons-png.flaticon.com/512/905/905341.png",
-      nombre: "Manchester United",
-      jugadores: 24,
-      costoPlantilla: 650000000,
-      dineroInicial: 120000000,
-      ingresos: 38000000,
-      dineroFinal: 158000000,
-    },
-  ];
+  const { data: equipos = [], isLoading, error } = useQuery<Equipo[]>({
+    queryKey: ["equipos"],
+    queryFn: getEquipos,
+  });
 
   const filteredEquipos = equipos.filter((equipo) =>
     equipo.nombre.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,9 +24,14 @@ export default function Equipos() {
     }).format(value);
   };
 
+  console.log("equipos recibido:", equipos, Array.isArray(equipos));
+
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-400">Equipos</h2>
+
+      {isLoading && <p className="text-gray-500">Cargando equipos...</p>}
+      {error && <p className="text-red-500">Error al cargar equipos</p>}
 
       {/* Filtro de búsqueda */}
       <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm">
@@ -103,13 +83,12 @@ export default function Equipos() {
               {filteredEquipos.map((equipo, index) => (
                 <tr
                   key={equipo.id}
-                  className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors ${
-                    index % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-gray-50 dark:bg-slate-700"
-                  }`}
+                  className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors ${index % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-gray-50 dark:bg-slate-700"
+                    }`}
                 >
                   <td className="px-4 py-3">
                     <img
-                      src={equipo.imagen}
+                      src={equipo.urlEscudo}
                       alt={equipo.nombre}
                       className="w-12 h-12 rounded-lg object-cover shadow-sm"
                     />
@@ -118,19 +97,19 @@ export default function Equipos() {
                     {equipo.nombre}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                    {equipo.jugadores}
+                    {equipo.totalJugadores}
                   </td>
                   <td className="px-4 py-3 text-sm text-red-600 font-medium">
-                    {formatCurrency(equipo.costoPlantilla)}
+                    {formatCurrency(equipo.totalPrecio)}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                    {formatCurrency(equipo.dineroInicial)}
+                    {formatCurrency(equipo.presupuestoInicial)}
                   </td>
                   <td className="px-4 py-3 text-sm text-green-600 font-medium">
                     {formatCurrency(equipo.ingresos)}
                   </td>
                   <td className="px-4 py-3 text-sm text-blue-700 font-bold">
-                    {formatCurrency(equipo.dineroFinal)}
+                    {formatCurrency(equipo.presupuestoFinal)}
                   </td>
                 </tr>
               ))}

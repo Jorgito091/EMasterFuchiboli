@@ -1,11 +1,52 @@
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../services/auth";
 import fuchibola from "../assets/fuchibola.png";
+
 
 interface LoginProps {
   setActivePage: (page: string) => void;
 }
 
 export default function Login({ setActivePage }: LoginProps) {
+  const [usuario, setUsuario] = useState("");
+  const [password, setPassword] = useState("");
+  const [device, setDevice] = useState("postman");
+  const [error, setError] = useState("");
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      console.log("Login exitoso:", data);
+      if (data.datos.usuario.token) {
+        localStorage.setItem("token", data.datos.usuario.token);
+        localStorage.setItem("usuario", data.datos.usuario.nombreUsuario);
+        localStorage.setItem("dispositivo", "postman");
+        localStorage.setItem("version", data.datos.usuario.version)
+      }
+      setActivePage("temporada");
+    },
+    onError: (err) => {
+      console.error("Login fallido:", err);
+      setError("Credenciales incorrectas o error en el servidor");
+    },
+  });
+
+  const handleLogin = () => {
+    if (!usuario || !password) {
+      setError("Por favor ingrese usuario y contraseña");
+      return;
+    }
+    setError("");
+    loginMutation.mutate({
+      usuario,
+      contraseña: password,
+      dispositivo: device,
+    });
+  };
+
   return (
+
     <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-slate-900 p-6">
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-3xl p-10 flex">
 
@@ -18,21 +59,42 @@ export default function Login({ setActivePage }: LoginProps) {
           <input
             type="text"
             placeholder="Usuario"
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)}
             className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg mb-4 focus:ring focus:ring-blue-300 dark:bg-slate-700 dark:text-gray-100 dark:placeholder-gray-400"
           />
+
 
           <input
             type="password"
             placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg mb-6 focus:ring focus:ring-blue-300 dark:bg-slate-700 dark:text-gray-100 dark:placeholder-gray-400"
           />
 
+          {error && (
+            <div className="mb-4 text-red-500 text-sm font-medium">
+              {error}
+            </div>
+          )}
+
+          {loginMutation.isError && (
+            <div className="mb-4 text-red-500 text-sm font-medium">
+              Error al conectar con el servidor
+            </div>
+          )}
+
+
           <button
-            onClick={() => setActivePage("temporada")}
-            className="w-full bg-blue-600 dark:bg-blue-700 text-white p-3 rounded-lg text-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition"
+            onClick={handleLogin}
+            disabled={loginMutation.isPending}
+            className={`w-full bg-blue-600 dark:bg-blue-700 text-white p-3 rounded-lg text-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition ${loginMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
-            Entrar
+            {loginMutation.isPending ? "Cargando..." : "Entrar"}
           </button>
+
         </div>
 
         {/* --- IMAGEN DERECHA --- */}
