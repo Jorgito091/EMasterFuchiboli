@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getEquipos } from "../services/equipos";
-import type { Equipo } from "../services/auth";
+import type { Equipo } from "../types/auth.types";
 
 export default function Equipos() {
   const [searchTerm, setSearchTerm] = useState("");

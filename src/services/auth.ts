@@ -1,71 +1,38 @@
-export interface Equipo {
-    id: number;
-    nombre: string;
-    nombreEstadio: string;
-    urlEscudo: string;
-    estatus: boolean;
-    presupuestoInicial: number;
-    presupuestoFinal: number;
-    ingresos: number;
-    gastos: number;
-    totalJugadores: number;
-    totalPrecio: number;
-    nombreGrupo: string;
-    urlEquipo: string | null;
-    fechaPublicacion: string;
-    publicacionPlantilla: boolean;
-    idUsuario: number;
-}
+/**
+ * Authentication Service
+ * Maneja la autenticación de usuarios y transforma datos del servidor
+ */
 
-export interface Temporada {
-    id: number;
-    descripcion: string;
-    activa: boolean;
-    transferenciasActivas: boolean;
-    transferenciasLibresActivas: boolean;
-    clausulasActivas: boolean;
-    bloqueos: boolean;
-    publicacionActiva: boolean;
-}
+import { ApiService } from './api/api.service';
+import { API_ENDPOINTS } from './api/api.endpoints';
+import type { LoginRequest, LoginResponse } from '../types/auth.types';
 
-export interface Usuario {
-    id: number;
-    nombreUsuario: string;
-    contraseña?: string;
-    administrador: boolean;
-    token: string;
-    equipo: Equipo;
-    version: string;
-}
-
-export interface LoginRequest {
-    usuario: string;
-    contraseña: string;
-    dispositivo: string;
-}
-
-export interface LoginResponse {
-    estado: number;
-    datos: {
-        usuario: Usuario;
-        temporada: Temporada;
-    };
-    total_datos: number;
-    mensaje: string;
-}
-
+/**
+ * Realiza el login de un usuario
+ * @param credentials - Credenciales del usuario (usuario, contraseña, dispositivo)
+ * @returns Datos del usuario y temporada activa
+ */
 export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const response = await fetch("/api/login/acceder", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-    });
+    try {
+        const response = await ApiService.postAsync<LoginResponse, LoginRequest>(
+            API_ENDPOINTS.AUTH.LOGIN,
+            credentials,
+            false, // No requiere autenticación previa
+            true   // Retornar respuesta completa
+        );
 
-    if (!response.ok) {
-        throw new Error("Error en la autenticación");
+        return response;
+    } catch (error) {
+        console.error('Error en login:', error);
+        throw new Error('Error en la autenticación');
     }
-
-    return response.json();
 };
+
+/**
+ * Exporta el servicio de autenticación
+ */
+export const AuthService = {
+    login,
+};
+
+export default AuthService;

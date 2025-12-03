@@ -11,7 +11,6 @@ interface LoginProps {
 export default function Login({ setActivePage }: LoginProps) {
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
-  const [device, setDevice] = useState("postman");
   const [error, setError] = useState("");
 
   const loginMutation = useMutation({
@@ -41,7 +40,7 @@ export default function Login({ setActivePage }: LoginProps) {
     loginMutation.mutate({
       usuario,
       contraseña: password,
-      dispositivo: device,
+      dispositivo: "postman",
     });
   };
 
