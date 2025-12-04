@@ -6,6 +6,7 @@ import type { Equipo } from "../types/auth.types";
 
 export default function Equipos() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSeason, setSelectedSeason] = useState("1");
 
   const { data: equipos = [], isLoading, error } = useQuery<Equipo[]>({
     queryKey: ["equipos"],
@@ -33,9 +34,9 @@ export default function Equipos() {
       {isLoading && <p className="text-gray-500">Cargando equipos...</p>}
       {error && <p className="text-red-500">Error al cargar equipos</p>}
 
-      {/* Filtro de búsqueda */}
-      <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm">
-        <div className="relative">
+      {/* Filtros */}
+      <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
             size={20}
@@ -47,6 +48,19 @@ export default function Equipos() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
           />
+        </div>
+        <div className="w-full md:w-48">
+          <select
+            value={selectedSeason}
+            onChange={(e) => setSelectedSeason(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
+          >
+            {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+              <option key={num} value={num}>
+                Temporada {num}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
