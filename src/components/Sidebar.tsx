@@ -37,19 +37,33 @@ export default function Sidebar({
 }: SidebarProps) {
   return (
     <div
-      className={`${
-        isSidebarOpen ? "w-64" : "w-16"
-      } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 flex flex-col transition-all duration-300`}
+      className={`${isSidebarOpen ? "w-64" : "w-16"
+        } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 flex flex-col transition-all duration-300`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700">
-        {isSidebarOpen && (
-          <span className="font-semibold text-blue-900 dark:text-blue-400 text-lg">EMaster Fuchiboli</span>
-        )}
+      <div className="flex flex-col gap-4 p-4 border-b border-gray-200 dark:border-slate-700">
+        <div className="flex items-center justify-between">
+          {isSidebarOpen && (
+            <span className="font-semibold text-blue-900 dark:text-blue-400 text-lg">EMaster Fuchiboli</span>
+          )}
 
-        <button onClick={toggleSidebar} className="hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded-lg text-gray-700 dark:text-gray-300">
-          {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
+          <button onClick={toggleSidebar} className="hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded-lg text-gray-700 dark:text-gray-300">
+            {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
+
+        {isSidebarOpen && (
+          <select
+            defaultValue="1"
+            className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-800 dark:text-gray-100"
+          >
+            {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+              <option key={num} value={num}>
+                Temporada {num}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* Navigation */}
@@ -62,11 +76,10 @@ export default function Sidebar({
             <button
               key={item.id}
               onClick={() => setActivePage(item.id)}
-              className={`flex items-center w-full gap-3 p-2 rounded-lg transition ${
-                active
-                  ? "bg-blue-900 dark:bg-blue-600 text-white"
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800"
-              }`}
+              className={`flex items-center w-full gap-3 p-2 rounded-lg transition ${active
+                ? "bg-blue-900 dark:bg-blue-600 text-white"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800"
+                }`}
             >
               <Icon size={18} />
               {isSidebarOpen && <span>{item.label}</span>}
