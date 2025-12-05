@@ -12,6 +12,7 @@ import Configuracion from "./pages/Configuracion";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState("login");
+  const [selectedSeason, setSelectedSeason] = useState(6);
 
   const navItems = [
     { id: "temporada", label: "Temporada" },
@@ -24,7 +25,7 @@ function App() {
 
   const pages: Record<string, React.ReactElement> = {
     temporada: <Temporada />,
-    equipos: <Equipos />,
+    equipos: <Equipos idTemporada={selectedSeason} />,
     jugadores: <Jugadores />,
     transferencias: <Transferencias />,
     noticias: <Noticias />,
@@ -43,6 +44,8 @@ function App() {
         activePage={activePage}
         setActivePage={setActivePage}
         navItems={navItems}
+        selectedSeason={selectedSeason}
+        onSeasonChange={setSelectedSeason}
       />
 
       <main className="flex-1 p-6 bg-white dark:bg-slate-800 border-l border-gray-300 dark:border-slate-700">

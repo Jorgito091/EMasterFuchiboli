@@ -79,7 +79,6 @@ export const getAsync = async <T>(
 
     const data: ApiResponse<T> = await response.json();
 
-    // Si el servidor retorna un estado de error en la respuesta JSON
     if (data.estado && data.estado !== 200) {
         const error: ApiError = {
             message: data.mensaje || 'Error en la petición al servidor',
@@ -88,7 +87,6 @@ export const getAsync = async <T>(
         throw error;
     }
 
-    // Si el HTTP status no es ok pero no tenemos info del servidor
     if (!response.ok && !data.estado) {
         await handleApiError(response);
     }

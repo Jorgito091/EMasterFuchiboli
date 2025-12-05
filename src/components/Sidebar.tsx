@@ -17,6 +17,8 @@ interface SidebarProps {
   setActivePage: (page: string) => void;
   toggleSidebar: () => void;
   navItems: { id: string; label: string }[];
+  selectedSeason: number;
+  onSeasonChange: (season: number) => void;
 }
 
 const icons: Record<string, LucideIcon> = {
@@ -34,6 +36,8 @@ export default function Sidebar({
   setActivePage,
   toggleSidebar,
   navItems,
+  selectedSeason,
+  onSeasonChange,
 }: SidebarProps) {
   return (
     <div
@@ -54,10 +58,11 @@ export default function Sidebar({
 
         {isSidebarOpen && (
           <select
-            defaultValue="1"
-            className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-800 dark:text-gray-100"
+            value={selectedSeason}
+            onChange={(e) => onSeasonChange(Number(e.target.value))}
+            className="w-full px-3 py-2 text-sm border border-blue-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-900 text-white"
           >
-            {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+            {Array.from({ length: 6 }, (_, i) => i + 1).map((num) => (
               <option key={num} value={num}>
                 Temporada {num}
               </option>

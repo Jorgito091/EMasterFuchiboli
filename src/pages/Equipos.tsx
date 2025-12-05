@@ -4,13 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 import { getEquipos } from "../services/equipos";
 import type { Equipo } from "../types/auth.types";
 
-export default function Equipos() {
+interface EquiposProps {
+  idTemporada: number;
+}
+
+export default function Equipos({ idTemporada }: EquiposProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  // const [selectedSeason, setSelectedSeason] = useState("1"); // Removed local state
 
   const { data: equipos = [], isLoading, error } = useQuery<Equipo[]>({
-    queryKey: ["equipos"], // Removed selectedSeason from queryKey
-    queryFn: getEquipos,
+    queryKey: ["equipos", idTemporada],
+    queryFn: () => getEquipos(idTemporada),
   });
 
   const filteredEquipos = equipos.filter((equipo) =>
@@ -25,7 +28,6 @@ export default function Equipos() {
     }).format(value);
   };
 
-  console.log("equipos recibido:", equipos, Array.isArray(equipos));
 
   return (
     <div className="space-y-6">
@@ -83,7 +85,7 @@ export default function Equipos() {
             <tbody className="divide-y divide-gray-200">
               {filteredEquipos.map((equipo, index) => (
                 <tr
-                  key={equipo.id}
+                  key={`${equipo.id}-${equipo.nombre}-${index}`}
                   className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors ${index % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-gray-50 dark:bg-slate-700"
                     }`}
                 >
@@ -92,6 +94,7 @@ export default function Equipos() {
                       src={equipo.urlEscudo}
                       alt={equipo.nombre}
                       className="w-12 h-12 rounded-lg object-cover shadow-sm"
+                      referrerPolicy="no-referrer"
                     />
                   </td>
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -104,7 +107,7 @@ export default function Equipos() {
                     {formatCurrency(equipo.totalPrecio)}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                    {formatCurrency(equipo.presupuestoInicial)}
+                    {formatCurrency(equipo.presupuestoFinal)}
                   </td>
                   <td className="px-4 py-3 text-sm text-green-600 font-medium">
                     {formatCurrency(equipo.ingresos)}

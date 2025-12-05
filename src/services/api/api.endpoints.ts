@@ -8,7 +8,7 @@ export const API_ENDPOINTS = {
 
     // Teams
     TEAMS: {
-        GET_ALL: '/api/equipos/obtener',
+        GET_PRESUPUESTOS: '/api/equipos/obtenerpresupuestos',
     },
 
     // Seasons

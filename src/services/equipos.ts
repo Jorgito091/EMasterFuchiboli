@@ -8,16 +8,17 @@ import { API_ENDPOINTS } from './api/api.endpoints';
 import type { Equipo } from '../types/auth.types';
 
 /**
- * Obtiene todos los equipos
- * @returns Lista de equipos
+ * Obtiene todos los equipos con sus presupuestos para una temporada
+ * @param idTemporada ID de la temporada (por defecto 6)
+ * @returns Lista de equipos con presupuestos
  */
-export const getEquipos = async (): Promise<Equipo[]> => {
+export const getEquipos = async (idTemporada: number = 6): Promise<Equipo[]> => {
     try {
+        const endpoint = `${API_ENDPOINTS.TEAMS.GET_PRESUPUESTOS}?idTemporada=${idTemporada}`;
         const equipos = await ApiService.getAsync<Equipo[]>(
-            API_ENDPOINTS.TEAMS.GET_ALL,
-            true // Requiere autenticación
+            endpoint,
+            true
         );
-
         return equipos;
     } catch (error) {
         console.error('Error al obtener equipos:', error);

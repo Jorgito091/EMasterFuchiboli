@@ -31,15 +31,27 @@ export default function Login({ setActivePage }: LoginProps) {
     },
   });
 
-  const handleLogin = () => {
+  const hashPassword = async (password: string): Promise<string> => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+  };
+
+  const handleLogin = async () => {
     if (!usuario || !password) {
       setError("Por favor ingrese usuario y contraseña");
       return;
     }
     setError("");
+
+    const hashedPassword = await hashPassword(password);
+
     loginMutation.mutate({
       usuario,
-      contraseña: password,
+      contraseña: hashedPassword,
       dispositivo: "postman",
     });
   };
