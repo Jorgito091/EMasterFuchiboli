@@ -56,12 +56,13 @@ export default function Login({ setActivePage }: LoginProps) {
     });
   };
 
+
   return (
 
     <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-slate-900 p-6">
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-3xl p-10 flex">
 
-        {/* --- FORMULARIO IZQUIERDA --- */}
+        {/* Formulario */}
         <div className="flex-1 flex flex-col justify-center">
           <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
             Iniciar Sesión
@@ -108,7 +109,7 @@ export default function Login({ setActivePage }: LoginProps) {
 
         </div>
 
-        {/* --- IMAGEN DERECHA --- */}
+        {/* Imagen */}
         <div className="flex-1 flex justify-center items-center">
           <img src={fuchibola} alt="Pelota" className="w-48 h-48 opacity-90" />
         </div>

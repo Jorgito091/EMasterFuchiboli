@@ -62,7 +62,7 @@ export default function Sidebar({
             onChange={(e) => onSeasonChange(Number(e.target.value))}
             className="w-full px-3 py-2 text-sm border border-blue-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-900 text-white"
           >
-            {Array.from({ length: 6 }, (_, i) => i + 1).map((num) => (
+            {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
               <option key={num} value={num}>
                 Temporada {num}
               </option>

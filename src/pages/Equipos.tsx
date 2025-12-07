@@ -6,9 +6,10 @@ import type { Equipo } from "../types/auth.types";
 
 interface EquiposProps {
   idTemporada: number;
+  onTeamSelect: (equipo: Equipo) => void;
 }
 
-export default function Equipos({ idTemporada }: EquiposProps) {
+export default function Equipos({ idTemporada, onTeamSelect }: EquiposProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: equipos = [], isLoading, error } = useQuery<Equipo[]>({
@@ -86,7 +87,8 @@ export default function Equipos({ idTemporada }: EquiposProps) {
               {filteredEquipos.map((equipo, index) => (
                 <tr
                   key={`${equipo.id}-${equipo.nombre}-${index}`}
-                  className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors ${index % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-gray-50 dark:bg-slate-700"
+                  onClick={() => onTeamSelect(equipo)}
+                  className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors cursor-pointer ${index % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-gray-50 dark:bg-slate-700"
                     }`}
                 >
                   <td className="px-4 py-3">

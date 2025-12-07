@@ -4,15 +4,18 @@ import Sidebar from "./components/Sidebar";
 import Login from "./pages/Login";
 import Temporada from "./pages/Temporada";
 import Equipos from "./pages/Equipos";
+import EquipoDetalle from "./pages/EquipoDetalle";
 import Jugadores from "./pages/Jugadores";
 import Transferencias from "./pages/Transferencias";
 import Noticias from "./pages/Noticias";
 import Configuracion from "./pages/Configuracion";
+import type { Equipo } from "./types/auth.types";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState("login");
   const [selectedSeason, setSelectedSeason] = useState(6);
+  const [selectedTeam, setSelectedTeam] = useState<Equipo | null>(null);
 
   const navItems = [
     { id: "temporada", label: "Temporada" },
@@ -23,9 +26,29 @@ function App() {
     { id: "configuracion", label: "Configuración" },
   ];
 
+  const handleTeamSelect = (equipo: Equipo) => {
+    setSelectedTeam(equipo);
+    setActivePage("equipo-detalle");
+  };
+
+  const handleBackToEquipos = () => {
+    setSelectedTeam(null);
+    setActivePage("equipos");
+  };
+
   const pages: Record<string, React.ReactElement> = {
     temporada: <Temporada />,
-    equipos: <Equipos idTemporada={selectedSeason} />,
+    equipos: <Equipos idTemporada={selectedSeason} onTeamSelect={handleTeamSelect} />,
+    "equipo-detalle": selectedTeam ? (
+      <EquipoDetalle
+        idTemporada={selectedSeason}
+        idEquipo={selectedTeam.id}
+        equipo={selectedTeam}
+        onBack={handleBackToEquipos}
+      />
+    ) : (
+      <Equipos idTemporada={selectedSeason} onTeamSelect={handleTeamSelect} />
+    ),
     jugadores: <Jugadores />,
     transferencias: <Transferencias />,
     noticias: <Noticias />,

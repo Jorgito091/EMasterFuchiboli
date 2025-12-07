@@ -20,7 +20,6 @@ export const API_ENDPOINTS = {
     // Players
     PLAYERS: {
         GET_ALL: '/api/jugadores/obtener',
-        GET_BY_TEAM: '/api/jugadores/equipo',
     },
 
     // Transfers
