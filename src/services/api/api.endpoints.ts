@@ -15,6 +15,9 @@ export const API_ENDPOINTS = {
     SEASONS: {
         GET_ACTIVE: '/api/temporadas/activa',
         GET_ALL: '/api/temporadas/obtener',
+        GET_TORNEOS: '/api/temporadas/ObtenerTorneos',
+        GET_TEMPORADA: '/api/temporadas/obtenerTemporada',
+        GET_MEJOR_EQUIPO: '/api/temporadas/obtenerMejorEquipo',
     },
 
     // Players

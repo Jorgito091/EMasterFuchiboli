@@ -14,7 +14,7 @@ import type { Equipo } from "./types/auth.types";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState("login");
-  const [selectedSeason, setSelectedSeason] = useState(6);
+  const [selectedSeason, setSelectedSeason] = useState(12);
   const [selectedTeam, setSelectedTeam] = useState<Equipo | null>(null);
 
   const navItems = [
@@ -37,7 +37,7 @@ function App() {
   };
 
   const pages: Record<string, React.ReactElement> = {
-    temporada: <Temporada />,
+    temporada: <Temporada idTemporada={selectedSeason} />,
     equipos: <Equipos idTemporada={selectedSeason} onTeamSelect={handleTeamSelect} />,
     "equipo-detalle": selectedTeam ? (
       <EquipoDetalle
