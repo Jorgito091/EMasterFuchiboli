@@ -36,6 +36,14 @@ function App() {
     setActivePage("equipos");
   };
 
+  const handleLogout = () => {
+    // Clear any user session data from localStorage
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userData");
+    // Redirect to login page
+    setActivePage("login");
+  };
+
   const pages: Record<string, React.ReactElement> = {
     temporada: <Temporada idTemporada={selectedSeason} />,
     equipos: <Equipos idTemporada={selectedSeason} onTeamSelect={handleTeamSelect} />,
@@ -69,6 +77,7 @@ function App() {
         navItems={navItems}
         selectedSeason={selectedSeason}
         onSeasonChange={setSelectedSeason}
+        onLogout={handleLogout}
       />
 
       <main className="flex-1 p-6 bg-white dark:bg-slate-800 border-l border-gray-300 dark:border-slate-700">

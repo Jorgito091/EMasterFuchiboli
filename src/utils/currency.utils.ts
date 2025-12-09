@@ -8,7 +8,7 @@
  * Ejemplo: 1000000 -> "$1,000,000.00"
  */
 export const formatCurrencyMillions = (value: number): string => {
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 2,
@@ -22,7 +22,7 @@ export const formatCurrencyMillions = (value: number): string => {
  */
 export const formatCurrencyShort = (value: number): string => {
     const millions = value / 1000000;
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 2,

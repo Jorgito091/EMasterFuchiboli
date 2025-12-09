@@ -19,6 +19,7 @@ interface SidebarProps {
   navItems: { id: string; label: string }[];
   selectedSeason: number;
   onSeasonChange: (season: number) => void;
+  onLogout: () => void;
 }
 
 const icons: Record<string, LucideIcon> = {
@@ -38,6 +39,7 @@ export default function Sidebar({
   navItems,
   selectedSeason,
   onSeasonChange,
+  onLogout,
 }: SidebarProps) {
   return (
     <div
@@ -95,7 +97,10 @@ export default function Sidebar({
 
       {/* Logout */}
       <div className="p-3 border-t border-gray-200 dark:border-slate-700">
-        <button className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 rounded-lg w-full justify-center">
+        <button
+          onClick={onLogout}
+          className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 rounded-lg w-full justify-center transition-colors"
+        >
           <LogOut size={18} />
           {isSidebarOpen && <span>Cerrar Sesión</span>}
         </button>
