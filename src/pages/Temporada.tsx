@@ -141,25 +141,27 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
                   {/* Columna Izquierda - Tabla General del Torneo */}
                   <div className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex items-center gap-3 flex-shrink-0">
-                      <Trophy size={24} />
-                      <h3 className="text-xl font-bold">Tabla General del Torneo</h3>
+                    <div className="p-6 border-b border-gray-200 dark:border-slate-700 flex-shrink-0">
+                      <div className="flex items-center gap-3">
+                        <Trophy size={24} className="text-blue-600 dark:text-blue-400" />
+                        <h3 className="text-xl font-bold text-blue-900 dark:text-blue-400">Tabla General del Torneo</h3>
+                      </div>
                     </div>
                     <div className="overflow-auto flex-1" style={{ maxHeight: 'calc(100vh - 14rem)' }}>
                       <table className="w-full text-sm">
-                        <thead className="bg-gray-100 dark:bg-slate-700 sticky top-0 z-10">
+                        <thead className="bg-gradient-to-r from-blue-600 to-blue-700 text-white sticky top-0 z-10">
                           <tr>
-                            <th className="px-2 py-2 text-left text-xs font-semibold text-gray-600 dark:text-gray-300">#</th>
-                            <th className="px-2 py-2 text-left text-xs font-semibold text-gray-600 dark:text-gray-300">Equipo</th>
-                            <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-300">JJ</th>
-                            <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-300">JG</th>
-                            <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-300">JE</th>
-                            <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-300">JP</th>
-                            <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-300">DG</th>
-                            <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-300">Pts</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">Equipo</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold">JJ</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold">JG</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold">JE</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold">JP</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold">DG</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold">Pts</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-slate-600">
+                        <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
                           {tabla.map((equipo, index) => {
                             const equipoNombre = typeof equipo.equipo === 'object' && equipo.equipo
                               ? equipo.equipo.nombre
@@ -191,16 +193,16 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                                   </tr>
                                 )}
                                 <tr
-                                  className={`${getRowBgColor(equipo.posicion, index, totalDelGrupo)} hover:bg-blue-50 dark:hover:bg-slate-600 transition-colors`}
+                                  className={`${getRowBgColor(equipo.posicion, index, totalDelGrupo)} hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors`}
                                 >
-                                  <td className="px-2 py-2">
+                                  <td className="px-4 py-3 text-sm">
                                     <span className={`font-bold ${equipo.posicion <= 4 ? "text-green-600" :
                                       esZonaDescenso ? "text-red-600" : "text-gray-700 dark:text-gray-300"
                                       }`}>
                                       {equipo.posicion}
                                     </span>
                                   </td>
-                                  <td className="px-2 py-2">
+                                  <td className="px-4 py-3 text-sm">
                                     <div className="flex items-center gap-2">
                                       {equipoEscudo && (
                                         <img
@@ -210,14 +212,14 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                                           referrerPolicy="no-referrer"
                                         />
                                       )}
-                                      <span className="font-medium text-gray-900 dark:text-gray-100 truncate max-w-24">{equipoNombre}</span>
+                                      <span className="font-medium text-gray-900 dark:text-gray-100">{equipoNombre}</span>
                                     </div>
                                   </td>
-                                  <td className="px-2 py-2 text-center text-gray-700 dark:text-gray-300">{equipo.juegosJugados ?? equipo.pj ?? 0}</td>
-                                  <td className="px-2 py-2 text-center text-green-600 font-medium">{equipo.juegosGanados ?? equipo.pg ?? 0}</td>
-                                  <td className="px-2 py-2 text-center text-yellow-600 font-medium">{equipo.juegosEmpatados ?? equipo.pe ?? 0}</td>
-                                  <td className="px-2 py-2 text-center text-red-600 font-medium">{equipo.juegosPerdidos ?? equipo.pp ?? 0}</td>
-                                  <td className="px-2 py-2 text-center font-medium">
+                                  <td className="px-4 py-3 text-sm text-center text-gray-700 dark:text-gray-300">{equipo.juegosJugados ?? equipo.pj ?? 0}</td>
+                                  <td className="px-4 py-3 text-sm text-center text-green-600 font-medium">{equipo.juegosGanados ?? equipo.pg ?? 0}</td>
+                                  <td className="px-4 py-3 text-sm text-center text-yellow-600 font-medium">{equipo.juegosEmpatados ?? equipo.pe ?? 0}</td>
+                                  <td className="px-4 py-3 text-sm text-center text-red-600 font-medium">{equipo.juegosPerdidos ?? equipo.pp ?? 0}</td>
+                                  <td className="px-4 py-3 text-sm text-center font-medium">
                                     <span className={
                                       (equipo.diferencia ?? equipo.dg ?? 0) > 0 ? "text-green-600" :
                                         (equipo.diferencia ?? equipo.dg ?? 0) < 0 ? "text-red-600" : "text-gray-500"
@@ -225,7 +227,7 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                                       {(equipo.diferencia ?? equipo.dg ?? 0) > 0 ? `+${equipo.diferencia ?? equipo.dg}` : equipo.diferencia ?? equipo.dg ?? 0}
                                     </span>
                                   </td>
-                                  <td className="px-2 py-2 text-center font-bold text-blue-700 dark:text-blue-400">{equipo.puntos ?? equipo.pts ?? 0}</td>
+                                  <td className="px-4 py-3 text-sm text-center font-bold text-blue-700 dark:text-blue-400">{equipo.puntos ?? equipo.pts ?? 0}</td>
                                 </tr>
                               </React.Fragment>
                             );
@@ -244,11 +246,13 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                   <div className="flex flex-col gap-4 h-full min-h-0">
                     {/* Goleadores - con altura limitada y scroll interno */}
                     <div className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
-                      <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 flex items-center gap-3 flex-shrink-0">
-                        <Target size={20} />
-                        <h3 className="text-lg font-bold">Goleadores</h3>
+                      <div className="p-6 border-b border-gray-200 dark:border-slate-700 flex-shrink-0">
+                        <div className="flex items-center gap-3">
+                          <Target size={24} className="text-yellow-500" />
+                          <h3 className="text-xl font-bold text-blue-900 dark:text-blue-400">Goleadores</h3>
+                        </div>
                       </div>
-                      <div className="p-3 overflow-y-auto flex-1">
+                      <div className="p-6 overflow-y-auto flex-1">
                         <div className="space-y-3">
                           {goleadores.slice(0, 10).map((goleador, index) => (
                             <div
@@ -296,11 +300,13 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
 
                     {/* Mejores Equipos */}
                     <div className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm overflow-hidden">
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-4 flex items-center gap-3">
-                        <Award size={24} />
-                        <h3 className="text-xl font-bold">Mejores Equipos</h3>
+                      <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+                        <div className="flex items-center gap-3">
+                          <Award size={24} className="text-green-500" />
+                          <h3 className="text-xl font-bold text-blue-900 dark:text-blue-400">Mejores Equipos</h3>
+                        </div>
                       </div>
-                      <div className="p-4">
+                      <div className="p-6">
                         <div className="space-y-4">
                           {/* Mejor Ataque */}
                           <div>
@@ -309,7 +315,7 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                               <h4 className="font-semibold text-gray-800 dark:text-gray-200">Mejor Ofensiva</h4>
                             </div>
                             {equipoOfensivo ? (
-                              <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 rounded-lg border border-red-200 dark:border-red-700">
                                 {equipoOfensivo.urlEscudo && (
                                   <img
                                     src={equipoOfensivo.urlEscudo}
@@ -336,7 +342,7 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                               <h4 className="font-semibold text-gray-800 dark:text-gray-200">Mejor Defensiva</h4>
                             </div>
                             {equipoDefensivo ? (
-                              <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-lg border border-blue-200 dark:border-blue-700">
                                 {equipoDefensivo.urlEscudo && (
                                   <img
                                     src={equipoDefensivo.urlEscudo}
