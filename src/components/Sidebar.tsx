@@ -1,3 +1,9 @@
+/**
+ * Sidebar Component
+ * Barra lateral de navegación principal de la aplicación
+ * Incluye: selector de temporadas, navegación entre páginas y logout
+ */
+
 import {
   Calendar,
   Users,
@@ -10,18 +16,34 @@ import {
   LogOut,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getTotalTemporadas } from "../services/temporadas";
 
+/**
+ * Props del componente Sidebar
+ */
 interface SidebarProps {
+  /** Estado de expansión del sidebar */
   isSidebarOpen: boolean;
+  /** ID de la página actualmente activa */
   activePage: string;
+  /** Callback para cambiar la página activa */
   setActivePage: (page: string) => void;
+  /** Callback para expandir/colapsar el sidebar */
   toggleSidebar: () => void;
+  /** Lista de items de navegación */
   navItems: { id: string; label: string }[];
+  /** Temporada seleccionada actualmente */
   selectedSeason: number;
+  /** Callback cuando cambia la temporada seleccionada */
   onSeasonChange: (season: number) => void;
+  /** Callback para cerrar sesión */
   onLogout: () => void;
 }
 
+/**
+ * Mapeo de IDs de página a iconos de Lucide
+ */
 const icons: Record<string, LucideIcon> = {
   temporada: Calendar,
   equipos: Users,
@@ -31,6 +53,24 @@ const icons: Record<string, LucideIcon> = {
   configuracion: Settings,
 };
 
+/**
+ * Componente Sidebar
+ * Renderiza la barra lateral con navegación y selector de temporadas
+ * 
+ * @example
+ * ```tsx
+ * <Sidebar
+ *   isSidebarOpen={true}
+ *   activePage="temporada"
+ *   setActivePage={setPage}
+ *   toggleSidebar={toggle}
+ *   navItems={items}
+ *   selectedSeason={13}
+ *   onSeasonChange={setSeason}
+ *   onLogout={handleLogout}
+ * />
+ * ```
+ */
 export default function Sidebar({
   isSidebarOpen,
   activePage,
@@ -41,6 +81,17 @@ export default function Sidebar({
   onSeasonChange,
   onLogout,
 }: SidebarProps) {
+  /**
+   * Query para obtener el total de temporadas desde el API
+   * - Se cachea por 1 hora para evitar llamadas innecesarias
+   * - Valor por defecto: 13 (fallback si el API falla)
+   */
+  const { data: totalTemporadas = 13 } = useQuery({
+    queryKey: ["totalTemporadas"],
+    queryFn: getTotalTemporadas,
+    staleTime: 1000 * 60 * 60, // Cache por 1 hora
+  });
+
   return (
     <div
       className={`${isSidebarOpen ? "w-64" : "w-16"
@@ -64,7 +115,7 @@ export default function Sidebar({
             onChange={(e) => onSeasonChange(Number(e.target.value))}
             className="w-full px-3 py-2 text-sm border border-blue-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-900 text-white"
           >
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
+            {Array.from({ length: totalTemporadas }, (_, i) => i + 1).map((num) => (
               <option key={num} value={num}>
                 Temporada {num}
               </option>
