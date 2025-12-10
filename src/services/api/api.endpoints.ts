@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
     // Teams
     TEAMS: {
         GET_PRESUPUESTOS: '/api/equipos/obtenerpresupuestos',
+        GET_INGRESOS_GASTOS: '/api/equipos/obtenerIngresosGastos',
     },
 
     // Seasons
