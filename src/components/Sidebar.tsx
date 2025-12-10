@@ -4,6 +4,7 @@
  * Incluye: selector de temporadas, navegación entre páginas y logout
  */
 
+import { useState, useRef, useEffect } from "react";
 import {
   Calendar,
   Users,
@@ -14,6 +15,7 @@ import {
   Menu,
   X,
   LogOut,
+  ChevronDown,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -81,6 +83,10 @@ export default function Sidebar({
   onSeasonChange,
   onLogout,
 }: SidebarProps) {
+  // State for dropdown visibility
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   /**
    * Query para obtener el total de temporadas desde el API
    * - Se cachea por 1 hora para evitar llamadas innecesarias
@@ -91,6 +97,23 @@ export default function Sidebar({
     queryFn: getTotalTemporadas,
     staleTime: 1000 * 60 * 60, // Cache por 1 hora
   });
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSeasonSelect = (season: number) => {
+    onSeasonChange(season);
+    setIsDropdownOpen(false);
+  };
 
   return (
     <div
@@ -109,18 +132,41 @@ export default function Sidebar({
           </button>
         </div>
 
+        {/* Custom Season Dropdown */}
         {isSidebarOpen && (
-          <select
-            value={selectedSeason}
-            onChange={(e) => onSeasonChange(Number(e.target.value))}
-            className="w-full px-3 py-2 text-sm border border-blue-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-900 text-white"
-          >
-            {Array.from({ length: totalTemporadas }, (_, i) => i + 1).map((num) => (
-              <option key={num} value={num}>
-                Temporada {num}
-              </option>
-            ))}
-          </select>
+          <div className="relative" ref={dropdownRef}>
+            {/* Dropdown Trigger Button */}
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full flex items-center justify-between px-4 py-2.5 bg-gradient-to-r from-blue-800 to-blue-900 hover:from-blue-700 hover:to-blue-800 text-white rounded-full border border-blue-600/30 shadow-lg shadow-blue-900/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+            >
+              <span className="font-medium text-sm">Temporada {selectedSeason}</span>
+              <ChevronDown
+                size={18}
+                className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isDropdownOpen && (
+              <div className="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-xl shadow-black/30 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                  {Array.from({ length: totalTemporadas }, (_, i) => totalTemporadas - i).map((num) => (
+                    <button
+                      key={num}
+                      onClick={() => handleSeasonSelect(num)}
+                      className={`w-full px-4 py-2.5 text-left text-sm transition-colors duration-150 ${num === selectedSeason
+                          ? "bg-blue-600 text-white font-medium"
+                          : "text-gray-300 hover:bg-slate-700 hover:text-white"
+                        }`}
+                    >
+                      Temporada {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
