@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "../services/auth";
 import { useAuth } from "../context/AuthContext";
 import type { UserSession } from "../types/user.types";
-import fuchibola from "../assets/fuchibola.png";
+import emasterLogo from "../assets/emaster_logo.png";
 
 
 interface LoginProps {
@@ -128,7 +128,7 @@ export default function Login({ setActivePage }: LoginProps) {
 
         {/* Imagen */}
         <div className="flex-1 flex justify-center items-center">
-          <img src={fuchibola} alt="Pelota" className="w-48 h-48 opacity-90" />
+          <img src={emasterLogo} alt="EMaster League" className="w-48 h-48 opacity-90" />
         </div>
       </div>
     </div>
