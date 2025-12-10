@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../services/auth";
+import { useAuth } from "../context/AuthContext";
+import type { UserSession } from "../types/user.types";
 import fuchibola from "../assets/fuchibola.png";
 
 
@@ -12,17 +14,32 @@ export default function Login({ setActivePage }: LoginProps) {
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login: authLogin } = useAuth();
 
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
       console.log("Login exitoso:", data);
-      if (data.datos.usuario.token) {
-        localStorage.setItem("token", data.datos.usuario.token);
-        localStorage.setItem("usuario", data.datos.usuario.nombreUsuario);
-        localStorage.setItem("dispositivo", "postman");
-        localStorage.setItem("version", data.datos.usuario.version)
-      }
+
+      // Crear objeto de sesión con todos los datos requeridos
+      const session: UserSession = {
+        userId: data.datos.usuario.id,
+        nombreUsuario: data.datos.usuario.nombreUsuario,
+        administrador: data.datos.usuario.administrador,
+        token: data.datos.usuario.token,
+        equipo: {
+          id: data.datos.usuario.equipo.id,
+          nombre: data.datos.usuario.equipo.nombre,
+          nombreEstadio: data.datos.usuario.equipo.nombreEstadio,
+          urlEscudo: data.datos.usuario.equipo.urlEscudo,
+          estatus: data.datos.usuario.equipo.estatus,
+        },
+        temporadaId: data.datos.temporada.id,
+        version: "3.0",
+      };
+
+      // Almacenar sesión en el contexto global
+      authLogin(session);
       setActivePage("temporada");
     },
     onError: (err) => {
