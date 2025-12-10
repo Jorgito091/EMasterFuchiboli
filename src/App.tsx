@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
+import { useAuth } from "./context/AuthContext";
 
 import Login from "./pages/Login";
 import Temporada from "./pages/Temporada";
@@ -12,10 +13,29 @@ import Configuracion from "./pages/Configuracion";
 import type { Equipo } from "./types/auth.types";
 
 function App() {
+  const { user, logout, isAuthenticated } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activePage, setActivePage] = useState("login");
-  const [selectedSeason, setSelectedSeason] = useState(12);
+  const [activePage, setActivePage] = useState(() =>
+    isAuthenticated ? "temporada" : "login"
+  );
+  const [selectedSeason, setSelectedSeason] = useState(() =>
+    user?.temporadaId ?? 12
+  );
   const [selectedTeam, setSelectedTeam] = useState<Equipo | null>(null);
+
+  // Actualizar temporada cuando cambie el usuario
+  useEffect(() => {
+    if (user?.temporadaId) {
+      setSelectedSeason(user.temporadaId);
+    }
+  }, [user?.temporadaId]);
+
+  // Redirigir a login si no está autenticado
+  useEffect(() => {
+    if (!isAuthenticated && activePage !== "login") {
+      setActivePage("login");
+    }
+  }, [isAuthenticated, activePage]);
 
   const navItems = [
     { id: "temporada", label: "Temporada" },
@@ -37,10 +57,8 @@ function App() {
   };
 
   const handleLogout = () => {
-    // Clear any user session data from localStorage
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("userData");
-    // Redirect to login page
+    // Usar logout del contexto para limpiar toda la sesión
+    logout();
     setActivePage("login");
   };
 
