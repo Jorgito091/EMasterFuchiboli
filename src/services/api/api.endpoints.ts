@@ -24,6 +24,8 @@ export const API_ENDPOINTS = {
     // Players
     PLAYERS: {
         GET_ALL: '/api/jugadores/obtener',
+        SAVE_PLAYER: '/api/guardar',
+        GET_PLAYER_DETAIL: '/api/jugadores/obtener', // Same endpoint but uses query param idJugador
     },
 
     // Transfers

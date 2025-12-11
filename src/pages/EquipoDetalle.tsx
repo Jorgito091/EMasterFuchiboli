@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getJugadoresByEquipo } from "../services/jugadores";
 import { getIngresosGastos } from "../services/equipos";
 import { formatCurrencyMillions, formatCurrencyShort } from "../utils/currency.utils";
+import PlayerProfileModal from "../components/PlayerProfileModal";
 import type { Jugador } from "../types/player.types";
 import type { Equipo } from "../types/auth.types";
 
@@ -23,6 +24,8 @@ export default function EquipoDetalle({
     onBack,
 }: EquipoDetalleProps) {
     const [activeTab, setActiveTab] = useState<TabType>("plantilla");
+    const [selectedPlayerId, setSelectedPlayerId] = useState<number | undefined>(undefined);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { data: jugadores = [], isLoading: isLoadingJugadores, error: errorJugadores } = useQuery<Jugador[]>({
         queryKey: ["jugadores", idTemporada, idEquipo],
@@ -200,7 +203,11 @@ export default function EquipoDetalle({
                                                 jugadores.map((jugador, index) => (
                                                     <tr
                                                         key={`${jugador.id}-${index}`}
-                                                        className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors ${index % 2 === 0
+                                                        onClick={() => {
+                                                            setSelectedPlayerId(jugador.id);
+                                                            setIsModalOpen(true);
+                                                        }}
+                                                        className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors cursor-pointer ${index % 2 === 0
                                                             ? "bg-white dark:bg-slate-800"
                                                             : "bg-gray-50 dark:bg-slate-700/50"
                                                             }`}
@@ -334,6 +341,16 @@ export default function EquipoDetalle({
                     )}
                 </div>
             </div>
+
+            <PlayerProfileModal
+                isOpen={isModalOpen}
+                mode="read"
+                playerId={selectedPlayerId}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedPlayerId(undefined);
+                }}
+            />
         </div>
     );
 }

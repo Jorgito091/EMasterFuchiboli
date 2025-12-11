@@ -29,3 +29,14 @@ export const formatCurrencyShort = (value: number): string => {
         maximumFractionDigits: 2,
     }).format(millions) + 'M';
 };
+/**
+ * Formatea un número como moneda estándar (EUR por defecto)
+ * Ejemplo: 1000 -> "1.000 €" (o formato local)
+ */
+export const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 0,
+    }).format(value);
+};
