@@ -26,6 +26,7 @@ export const API_ENDPOINTS = {
         GET_ALL: '/api/jugadores/obtener',
         SAVE_PLAYER: '/api/jugadores/guardar',
         GET_PLAYER_DETAIL: '/api/jugadores/obtener', // Same endpoint but uses query param idJugador
+        GET_AVAILABLE: '/api/jugadores/obtener_filtro', // Paginated player listing
     },
 
     // Transfers

@@ -2,6 +2,53 @@ import { ApiService } from './api/api.service';
 import { API_ENDPOINTS } from './api/api.endpoints';
 import type { Jugador } from '../types/player.types';
 import type { JugadorDTO, JugadorDetalleResponse } from '../types/player-dto.types';
+import type { JugadoresListResponse } from '../types/jugador-listado.types';
+
+/**
+ * Obtiene listado de jugadores disponibles con paginación
+ * @param pagina Número de página (default: 1)
+ * @returns Respuesta paginada con jugadores
+ */
+export const getJugadoresDisponibles = async (
+    pagina: number = 1
+): Promise<JugadoresListResponse> => {
+    try {
+        const endpoint = `${API_ENDPOINTS.PLAYERS.GET_AVAILABLE}?pagina=${pagina}`;
+
+        // Obtener headers de autenticación
+        const token = (localStorage.getItem('token') || '').replace(/"/g, '');
+        const usuario = localStorage.getItem('usuario') || '';
+        const dispositivo = localStorage.getItem('dispositivo') || 'postman';
+        const version = '3.0';
+
+        if (!token) {
+            throw new Error("No authenticated user");
+        }
+
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                token,
+                usuario,
+                dispositivo,
+                version,
+                'tipo-app': 'app',
+            },
+        });
+
+        const data: JugadoresListResponse = await response.json();
+
+        if (data.estado && data.estado !== 200) {
+            throw new Error(data.mensaje || 'Error al obtener jugadores');
+        }
+
+        return data;  // Retorna respuesta completa con total_datos
+    } catch (error) {
+        console.error('Error al obtener jugadores disponibles:', error);
+        throw new Error('Error al obtener jugadores disponibles');
+    }
+};
 
 /**
  * Obtiene todos los jugadores de un equipo en una temporada
@@ -71,6 +118,7 @@ export const saveJugador = async (
  * Exporta el servicio de jugadores
  */
 export const PlayersService = {
+    getJugadoresDisponibles,
     getJugadoresByEquipo,
     getJugadorDetalle,
     saveJugador,
