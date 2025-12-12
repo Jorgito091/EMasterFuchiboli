@@ -38,7 +38,7 @@ export default function PlayerProfileModal({
     onClose,
     onSave,
 }: PlayerProfileModalProps) {
-    const { isAdmin } = useAuth();
+    const { isAdmin, user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [searchId, setSearchId] = useState("");
     const [formData, setFormData] = useState<JugadorDTO>(INITIAL_FORM_DATA);
@@ -273,7 +273,7 @@ export default function PlayerProfileModal({
                                             <div className="font-bold text-gray-900 dark:text-white">{playerDetail.nombreEquipo}</div>
                                             {playerDetail.clausulaRecision && (
                                                 <div className="text-xs text-orange-600 dark:text-orange-400 font-medium mt-1">
-                                                    Cláusula de Rescisión Activa
+                                                    Cláusula de Rescisión Activa: {playerDetail.precioClausula.toLocaleString("es-ES", { style: "currency", currency: "EUR" })}
                                                 </div>
                                             )}
                                         </div>
@@ -409,29 +409,33 @@ export default function PlayerProfileModal({
                                     />
                                 </div>
 
-                                {/* URL Imagen */}
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL Imagen</label>
-                                    <input
-                                        type="text"
-                                        value={formData.urlImagen}
-                                        onChange={(e) => setFormData({ ...formData, urlImagen: e.target.value })}
-                                        disabled={!isEditing}
-                                        className="w-full px-3 py-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white disabled:opacity-60"
-                                    />
-                                </div>
+                                {isAdmin && (
+                                    <>
+                                        {/* URL Imagen */}
+                                        <div className="md:col-span-2">
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL Imagen</label>
+                                            <input
+                                                type="text"
+                                                value={formData.urlImagen}
+                                                onChange={(e) => setFormData({ ...formData, urlImagen: e.target.value })}
+                                                disabled={!isEditing}
+                                                className="w-full px-3 py-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white disabled:opacity-60"
+                                            />
+                                        </div>
 
-                                {/* URL Jugador (Source) */}
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL de Jugador</label>
-                                    <input
-                                        type="text"
-                                        value={formData.url}
-                                        onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                                        disabled={!isEditing}
-                                        className="w-full px-3 py-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white disabled:opacity-60"
-                                    />
-                                </div>
+                                        {/* URL Jugador (Source) */}
+                                        <div className="md:col-span-2">
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL de Jugador</label>
+                                            <input
+                                                type="text"
+                                                value={formData.url}
+                                                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                                                disabled={!isEditing}
+                                                className="w-full px-3 py-2 border rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-white disabled:opacity-60"
+                                            />
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             {/* Actions Area */}
@@ -446,34 +450,40 @@ export default function PlayerProfileModal({
                                                 Cancelar Edición
                                             </button>
                                         )}
-                                        <button
-                                            onClick={handleSave}
-                                            disabled={loading}
-                                            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 shadow-md disabled:opacity-50"
-                                        >
-                                            <Save size={18} />
-                                            Guardar Guardar
-                                        </button>
+                                        {/* Guardar Button - Visible to Admin or Team Owner */}
+                                        {(isAdmin || (playerDetail && user?.equipo?.id === playerDetail.idEquipo) || mode === "capture") && (
+                                            <button
+                                                onClick={handleSave}
+                                                disabled={loading}
+                                                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 shadow-md disabled:opacity-50"
+                                            >
+                                                <Save size={18} />
+                                                Guardar
+                                            </button>
+                                        )}
                                     </>
                                 ) : (
                                     <>
-                                        {isAdmin && (
-                                            <button
-                                                onClick={() => setIsEditing(true)}
-                                                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md"
-                                            >
-                                                <Edit2 size={18} />
-                                                Editar Información
-                                            </button>
+                                        {(isAdmin || (playerDetail && user?.equipo?.id === playerDetail.idEquipo)) && (
+                                            <>
+                                                <button
+                                                    onClick={() => setIsEditing(true)}
+                                                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md"
+                                                >
+                                                    <Edit2 size={18} />
+                                                    Editar Información
+                                                </button>
+
+                                                {/* Transfer button (Future functionality) */}
+                                                <button
+                                                    disabled
+                                                    className="px-6 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed flex items-center gap-2"
+                                                    title="Funcionalidad próximamente"
+                                                >
+                                                    Transferir
+                                                </button>
+                                            </>
                                         )}
-                                        {/* Transfer button (Future functionality) */}
-                                        <button
-                                            disabled
-                                            className="px-6 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed flex items-center gap-2"
-                                            title="Funcionalidad próximamente"
-                                        >
-                                            Transferir
-                                        </button>
                                     </>
                                 )}
                             </div>
