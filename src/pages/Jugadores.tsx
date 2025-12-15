@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Edit2, Trash2, Plus, Search, ChevronLeft, ChevronRight, Loader2, Users } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -6,35 +6,36 @@ import PlayerProfileModal from "../components/PlayerProfileModal";
 import { getJugadoresDisponibles } from "../services/jugadores";
 import type { JugadorListado } from "../types/jugador-listado.types";
 
-const ITEMS_PER_PAGE = 20; // Estimación basada en el API
+const ITEMS_PER_PAGE = 50; // Basado en respuesta del API
 
 export default function Jugadores() {
   const { isAdmin } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState<"capture" | "read">("read");
   const [selectedPlayerId, setSelectedPlayerId] = useState<number | undefined>(undefined);
 
-  // Fetch jugadores desde API con paginación
+  // Debounce para el término de búsqueda (500ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setCurrentPage(1); // Reset a página 1 al buscar
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Fetch jugadores desde API con paginación y búsqueda
   const { data, isLoading, error, isFetching } = useQuery({
-    queryKey: ["jugadores-disponibles", currentPage],
-    queryFn: () => getJugadoresDisponibles(currentPage),
+    queryKey: ["jugadores-disponibles", currentPage, debouncedSearchTerm],
+    queryFn: () => getJugadoresDisponibles(currentPage, debouncedSearchTerm),
     staleTime: 1000 * 60 * 5, // 5 minutos
   });
 
   const jugadores = data?.datos || [];
   const totalDatos = data?.total_datos || 0;
   const totalPages = Math.ceil(totalDatos / ITEMS_PER_PAGE) || 1;
-
-  // Filtro local por nombre, equipo o posición
-  const filteredPlayers = jugadores.filter(
-    (player) =>
-      player.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      player.apodo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      player.nombreEquipo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      player.posicion.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleOpenCapture = () => {
     setModalMode("capture");
@@ -129,7 +130,7 @@ export default function Jugadores() {
           />
           <input
             type="text"
-            placeholder="Buscar por nombre, apodo, equipo o posición..."
+            placeholder="Buscar por nombre, apodo o posición..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-700 dark:text-gray-100"
@@ -182,14 +183,14 @@ export default function Jugadores() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
-                  {filteredPlayers.length === 0 ? (
+                  {jugadores.length === 0 ? (
                     <tr>
                       <td colSpan={isAdmin ? 9 : 8} className="px-4 py-8 text-center text-gray-500">
                         {searchTerm ? "No se encontraron jugadores con ese criterio" : "No hay jugadores disponibles"}
                       </td>
                     </tr>
                   ) : (
-                    filteredPlayers.map((player, index) => (
+                    jugadores.map((player, index) => (
                       <tr
                         key={player.id}
                         className={`hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors ${index % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-gray-50 dark:bg-slate-700/50"
@@ -282,7 +283,7 @@ export default function Jugadores() {
           {/* Pagination */}
           <div className="flex items-center justify-between bg-white dark:bg-slate-800 px-4 py-2 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm">
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              Mostrando <span className="font-medium">{filteredPlayers.length}</span> de{" "}
+              Mostrando <span className="font-medium">{jugadores.length}</span> de{" "}
               <span className="font-medium">{totalDatos}</span> jugadores
             </div>
 

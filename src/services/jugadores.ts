@@ -5,15 +5,21 @@ import type { JugadorDTO, JugadorDetalleResponse } from '../types/player-dto.typ
 import type { JugadoresListResponse } from '../types/jugador-listado.types';
 
 /**
- * Obtiene listado de jugadores disponibles con paginación
+ * Obtiene listado de jugadores disponibles con paginación y búsqueda
  * @param pagina Número de página (default: 1)
+ * @param busqueda Término de búsqueda opcional (id, nombre, apodo o posición)
  * @returns Respuesta paginada con jugadores
  */
 export const getJugadoresDisponibles = async (
-    pagina: number = 1
+    pagina: number = 1,
+    busqueda?: string
 ): Promise<JugadoresListResponse> => {
     try {
-        const endpoint = `${API_ENDPOINTS.PLAYERS.GET_AVAILABLE}?pagina=${pagina}`;
+        // Construir URL con parámetros
+        let endpoint = `${API_ENDPOINTS.PLAYERS.GET_AVAILABLE}?pagina=${pagina}`;
+        if (busqueda && busqueda.trim() !== '') {
+            endpoint += `&busqueda=${encodeURIComponent(busqueda.trim())}`;
+        }
 
         // Obtener headers de autenticación
         const token = (localStorage.getItem('token') || '').replace(/"/g, '');
@@ -40,10 +46,19 @@ export const getJugadoresDisponibles = async (
         const data: JugadoresListResponse = await response.json();
 
         if (data.estado && data.estado !== 200) {
+            if (data.mensaje?.toLowerCase().includes('no se encontraron') ||
+                data.mensaje?.toLowerCase().includes('no hay')) {
+                return {
+                    estado: 200,
+                    datos: [],
+                    total_datos: 0,
+                    mensaje: data.mensaje
+                };
+            }
             throw new Error(data.mensaje || 'Error al obtener jugadores');
         }
 
-        return data;  // Retorna respuesta completa con total_datos
+        return data;
     } catch (error) {
         console.error('Error al obtener jugadores disponibles:', error);
         throw new Error('Error al obtener jugadores disponibles');
