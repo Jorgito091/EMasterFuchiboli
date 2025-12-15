@@ -37,6 +37,7 @@ export const API_ENDPOINTS = {
 
     // News
     NEWS: {
-        GET_ALL: '/api/noticias/obtener',
+        GET_ALL: '/api/noticias', // params: page
+        SAVE: '/api/noticias',
     },
 } as const;

@@ -9,6 +9,12 @@ import type { ApiResponse, ApiError, AuthHeaders, BasicHeaders } from '../../typ
  * Obtiene los headers de autenticación desde localStorage
  * @throws Error si no hay token y se requiere autenticación
  */
+const sanitizeHeader = (value: string): string => {
+    // Remove non-ASCII characters to prevent fetch errors
+    // eslint-disable-next-line no-control-regex
+    return value.replace(/[^\x00-\x7F]/g, "");
+};
+
 const getAuthHeaders = (): AuthHeaders => {
     // Match original logic: only replace quotes in token
     const token = (localStorage.getItem('token') || '').replace(/"/g, '');
@@ -24,9 +30,9 @@ const getAuthHeaders = (): AuthHeaders => {
 
     return {
         'Content-Type': 'application/json',
-        token,
-        usuario,
-        dispositivo,
+        token: sanitizeHeader(token),
+        usuario: sanitizeHeader(usuario),
+        dispositivo: sanitizeHeader(dispositivo),
         version,
         'tipo-app': 'app',
     };
@@ -139,11 +145,51 @@ export const postAsync = async <T, D = unknown>(
 };
 
 /**
+ * Realiza una petición DELETE
+ * @param endpoint - Endpoint de la API
+ * @param requiresAuth - Si requiere autenticación (default: false)
+ * @returns Promesa con los datos de la respuesta
+ */
+export const deleteAsync = async <T>(
+    endpoint: string,
+    requiresAuth: boolean = false
+): Promise<T> => {
+    const headers = requiresAuth ? getAuthHeaders() : getBasicHeaders();
+
+    const response = await fetch(endpoint, {
+        method: 'DELETE',
+        headers: headers as HeadersInit,
+    });
+
+    // Handle empty responses (204 No Content)
+    if (response.status === 204) {
+        return {} as T;
+    }
+
+    const data: ApiResponse<T> = await response.json();
+
+    if (data.estado && data.estado !== 200) {
+        const error: ApiError = {
+            message: data.mensaje || 'Error en la petición al servidor',
+            status: data.estado,
+        };
+        throw error;
+    }
+
+    if (!response.ok && !data.estado) {
+        await handleApiError(response);
+    }
+
+    return data.datos || (data as unknown as T);
+};
+
+/**
  * Exporta el servicio API como objeto
  */
 export const ApiService = {
     getAsync,
     postAsync,
+    deleteAsync,
 };
 
 export default ApiService;
