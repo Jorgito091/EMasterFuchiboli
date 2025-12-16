@@ -40,4 +40,12 @@ export const API_ENDPOINTS = {
         GET_ALL: '/api/noticias', // params: page
         SAVE: '/api/noticias',
     },
+
+    // Jornadas
+    JORNADAS: {
+        GET_JORNADAS: '/api/jornadas/obtener_jornadas', // params: idTemporada, idTorneo
+        GET_ENCUENTROS: '/api/jornadas/obtener_encuentros', // params: idJornada
+        GET_PENDIENTES: '/api/jornadas/obtener_encuentros_pendientes', // params: idTemporada, idTorneo, idEquipo
+        GET_JUGADOS: '/api/jornadas/obtener_encuentros_jugados', // params: idTemporada, idTorneo, idEquipo
+    },
 } as const;
