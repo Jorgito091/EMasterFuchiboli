@@ -5,6 +5,27 @@ import { NoticiasService } from "../services/noticias";
 import type { NoticiaDTO, CreateNoticiaDTO } from "../types/noticias.types";
 import { useAuth } from "../context/AuthContext";
 import CreateNoticiaModal from "../components/CreateNoticiaModal";
+import fuchibola from "../assets/fuchibola.png";
+
+// Reusable Image Component with Fallback Logic
+const ImageWithFallback = ({ src, alt, className }: { src: string; alt: string; className: string }) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  const handleError = () => {
+    if (imgSrc !== fuchibola) {
+      setImgSrc(fuchibola);
+    }
+  };
+
+  return (
+    <img
+      src={imgSrc}
+      className={className}
+      alt={alt}
+      onError={handleError}
+    />
+  );
+};
 
 export default function Noticias() {
   const { user, isAuthenticated } = useAuth();
@@ -101,13 +122,10 @@ export default function Noticias() {
                         onClick={() => setSelectedNew(n)}
                         className="p-4 border rounded-xl cursor-pointer hover:bg-gray-100 dark:bg-slate-700 transition flex items-center space-x-4"
                       >
-                        <img
+                        <ImageWithFallback
                           src={n.urlImagen}
                           className="w-16 h-16 rounded-lg object-cover"
                           alt="thumb"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/assets/placeholder.jpg'; // Fallback
-                          }}
                         />
 
                         <div>
@@ -179,20 +197,17 @@ export default function Noticias() {
 
               {/* BANNER GRANDE */}
               <div className="w-full mb-4 hidden md:block relative h-64 overflow-hidden rounded-xl">
-                <img
+                <ImageWithFallback
                   src={selectedNew.urlImagen}
                   className="w-full h-full object-cover"
                   alt="banner grande"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/assets/placeholder.jpg';
-                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/10"></div>
               </div>
 
               {/* Banner lateral fijo para pantallas pequeñas */}
               <div className="fixed bottom-4 right-4 w-32 md:hidden">
-                <img
+                <ImageWithFallback
                   src={selectedNew.urlImagen}
                   className="rounded-xl shadow-lg"
                   alt="banner lateral"
