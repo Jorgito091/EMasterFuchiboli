@@ -76,7 +76,7 @@ function App() {
       <Equipos idTemporada={selectedSeason} onTeamSelect={handleTeamSelect} />
     ),
     jugadores: <Jugadores />,
-    transferencias: <Transferencias />,
+    transferencias: <Transferencias idTemporada={selectedSeason} />,
     noticias: <Noticias />,
     configuracion: <Configuracion />,
   };

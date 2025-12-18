@@ -31,8 +31,10 @@ export const API_ENDPOINTS = {
 
     // Transfers
     TRANSFERS: {
-        GET_ALL: '/api/transferencias/obtener',
-        CREATE: '/api/transferencias/crear',
+        GET_ALL: '/api/transferencias',
+        GET_TIPOS: '/api/transferencias/obtenertipos',
+        GET_OFERTAS_ALL: '/api/transferencias/obtenerjugadoresofertados',
+        GET_OFERTAS_EQUIPO: '/api/transferencias/obtenerjugadoresofertados', // Same endpoint, filtered by idEquipo
     },
 
     // News
