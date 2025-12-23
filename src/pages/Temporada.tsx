@@ -141,22 +141,24 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
     queryFn: async () => {
       if (viewMode !== 'jornadas') return [];
 
+      let responseData: any = [];
+
       if (jornadaMode === 'jornada' && selectedJornadaId) {
-        const data = await JornadasService.getEncuentros(selectedJornadaId);
-        return toArray(data);
+        responseData = await JornadasService.getEncuentros(selectedJornadaId);
+      } else if (jornadaMode === 'pendientes' && user?.equipo?.id) {
+        responseData = await JornadasService.getPendientes(idTemporada, selectedTorneo!, user.equipo.id);
+      } else if (jornadaMode === 'jugados' && user?.equipo?.id) {
+        responseData = await JornadasService.getJugados(idTemporada, selectedTorneo!, user.equipo.id);
+      } else {
+        return [];
       }
 
-      if (jornadaMode === 'pendientes' && user?.equipo?.id) {
-        const data = await JornadasService.getPendientes(idTemporada, selectedTorneo!, user.equipo.id);
-        return toArray(data);
-      }
+      // Extracción robusta de la lista de encuentros
+      // Buscamos propiedades comunes donde el backend podría envolver la lista
+      const data = responseData;
+      const list = data?.lstEncuentros || data?.encuentros || (Array.isArray(data) ? data : (data?.datos || data?.data || data));
 
-      if (jornadaMode === 'jugados' && user?.equipo?.id) {
-        const data = await JornadasService.getJugados(idTemporada, selectedTorneo!, user.equipo.id);
-        return toArray(data);
-      }
-
-      return [];
+      return toArray(list);
     },
     enabled: selectedTorneo !== null && viewMode === 'jornadas' && (
       (jornadaMode === 'jornada' && !!selectedJornadaId) ||

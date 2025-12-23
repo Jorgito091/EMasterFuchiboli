@@ -1,143 +1,125 @@
-# Manual Técnico: EMaster Fuchiboli (Guía de Desarrollador)
+# Documentación Técnica Integral - EMasterFuchiboli
 
-Este documento detalla la arquitectura técnica, los estándares de código y los flujos de datos críticos para el mantenimiento y escalabilidad de la plataforma.
-
----
-
-## 1. Arquitectura de Software
-
-La aplicación sigue un patrón de **Arquitectura de Capas Disociadas**, diseñado para minimizar el acoplamiento entre la UI y el Backend.
-
-### 1.1 Diagrama de Capas
-1.  **Capa de Presentación (React Components)**: Se encarga exclusivamente del renderizado y la gestión de eventos de usuario utilizando Tailwind CSS.
-2.  **Capa de Estado Global (Hooks/Context)**: Maneja la persistencia de sesión (`AuthContext`) y el tema visual (`ThemeContext`).
-3.  **Capa de Cache & Fetching (React Query)**: Administra el estado asíncrono, las re-peticiones y la caché de datos del servidor.
-4.  **Capa de Negocio (Services)**: Contiene las funciones que transforman las peticiones de la UI en llamadas a la API y aplican reglas de negocio básicas.
-5.  **Capa de Red (ApiService)**: Centraliza la configuración de `fetch`, inyección de cabeceras y manejo de errores HTTP.
+Documentacion para que sepan que show 
 
 ---
 
-## 2. Inmersión por Módulos (Deep Dive)
+## 1. Arquitectura y Stack
+*   **Core**: React 18+ con Vite (SPA).
+*   **Lenguaje**: TypeScript (Strict Mode).
+*   **Gestión de Datos**: TanStack Query v5 (React Query).
+*   **Estilos**: TailwindCSS + Lucide Icons.
+*   **Autenticación**: JWT / Bearer Token persistido en LocalStorage vía Context API.
 
-A continuación se detalla el funcionamiento de cada sección del sistema, indicando sus servicios, tipos y llamados a la API.
+## 2. Gestión de Navegación y Estado Global (`App.tsx`)
+La aplicación no utiliza un router externo (como react-router), sino un sistema de **Renderizado Condicional** basado en el estado `activePage`.
 
-### 2.1 Autenticación (Auth)
-- **Propósito**: Validar identidad y configurar el contexto global (`temporadaId`, `token`).
-- **Servicio**: `AuthService.login` (`services/auth.ts`).
-- **Endpoint**: `AUTH.LOGIN` (`/api/login/acceder`).
-- **Tipos Clave**:
-    - `LoginRequest`: (usuario, contraseña haseada, dispositivo).
-    - `LoginResponse`: Contiene el objeto `usuario` y la `temporada` activa.
-    - `UserSession`: Estructura que se guarda en `AuthContext` y `localStorage`.
-- **Flujo**: Se cifra la contraseña en SHA-256 en `Login.tsx` antes de enviarla. Al recibir éxito, se inyecta la sesión en el `AuthProvider`.
-
-### 2.2 Temporada (Tabla y Goleadores)
-- **Propósito**: Mostrar el estado competitivo de los torneos.
-- **Servicio**: `TemporadasService` (`services/temporadas.ts`).
-- **Endpoints**:
-    - `SEASONS.GET_TORNEOS`: Lista de torneos disponibles.
-    - `SEASONS.GET_TEMPORADA`: Datos de tabla, goleadores y mejores equipos.
-- **Tipos Clave**:
-    - `Torneo`: (id, nombre, urlImagen).
-    - `EquipoTabla`: (posicion, juegosJugados, puntos, diferencia).
-    - `Goleador`: (jugador: {nombre}, equipo: {nombre}, goles).
-- **Lógica UI**: `Temporada.tsx` orquesta el cambio entre torneos y refresca los datos automáticamente vía React Query.
-
-### 2.3 Jornadas y Encuentros
-- **Propósito**: Reportar y visualizar partidos.
-- **Servicio**: `JornadasService` (`services/jornadas.ts`).
-- **Endpoints**:
-    - `JORNADAS.GET_ENCUENTROS`: Todos los partidos de una jornada.
-    - `JORNADAS.GET_PENDIENTES`: Partidos sin reporte filtrados por equipo.
-    - `JORNADAS.GET_JUGADOS`: Historial de resultados del equipo.
-- **Tipos Clave**:
-    - `Jornada`: Define si está activa, cerrada o es eliminatoria.
-    - `Encuentro`: Vincula dos equipos y contiene el marcador y autor del reporte.
-- **Integración**: Se utiliza el `user.equipo.id` del contexto de autenticación para los filtros de "Mis Partidos".
-
-### 2.4 Mercado de Jugadores
-- **Propósito**: Exploración global, creación y edición de futbolistas.
-- **Servicio**: `JugadoresService` (`services/jugadores.ts`).
-- **Endpoints**:
-    - `PLAYERS.GET_AVAILABLE`: Listado paginado con soporte de búsqueda.
-    - `PLAYERS.SAVE_PLAYER`: Crear o actualizar perfil.
-    - `PLAYERS.GET_PLAYER_DETAIL`: Información extendida para el modal.
-- **Tipos Clave**:
-    - `JugadorListado`: Vista ligera para la tabla global.
-    - `JugadorDTO`: Estructura para envío/guardado.
-    - `JugadorDetalleResponse`: Datos completos (cláusula, estado de bloqueo).
-- **Lógica de UI**: El `PlayerProfileModal.tsx` cambia entre modo "Lectura" (perfil) y "Captura" (Admin).
-
-### 2.5 Equipos y Finanzas
-- **Propósito**: Control administrativo de los presupuestos de los clubes.
-- **Servicio**: `TeamsService` (`services/equipos.ts`).
-- **Endpoints**:
-    - `TEAMS.GET_PRESUPUESTOS`: Resumen financiero de todos los equipos.
-    - `TEAMS.GET_INGRESOS_GASTOS`: Historial de transacciones de un equipo específico.
-- **Tipos Clave**:
-    - `Equipo`: (presupuestoInicial, ingresos, gastos).
-    - `Transaccion`: (concepto, monto, tipo: ingreso/gasto).
-- **Integración**: `EquipoDetalle.tsx` utiliza `formatCurrencyMillions` para simplificar la visualización de grandes montos.
-
-### 2.6 Transferencias
-- **Propósito**: Registro histórico del flujo de dinero entre equipos.
-- **Endpoints**:
-    - `TRANSFERS.GET_ALL`: Lista de fichajes realizados.
-    - `TRANSFERS.GET_TIPOS`: Categorías (Libre, Traspaso, Intercambio).
-- **Tipos Clave**: `Transferencia`, `OfertaJugador`.
-
-### 2.7 Detalle de Encuentro y Estadísticas
-- **Propósito**: Capturar resultados oficiales, goleadores, lesiones y evidencias (imágenes).
-- **Servicio**: `JornadasService` (`services/jornadas.ts`).
-- **Endpoints**:
-    - `JORNADAS.GET_INFO_ENCUENTRO`: Información detallada de un partido.
-    - `JORNADAS.SAVE_ENCUENTRO`: Envío de estadísticas y marcador final.
-- **Tipos Clave**: 
-    - `EstadisticaJugadorSaveDto`: Estructura simplificada para guardado.
-    - `PrmEncuentroEstadisticas`: Payload maestro para el guardado.
-- **Lógica UI**: `MatchDetailModal.tsx` maneja el cálculo dinámico del marcador (goles + autogoles del rival) y valida la presencia de imágenes antes del envío.
+*   **Estado `activePage`**: Determina qué componente de la carpeta `/src/pages` se muestra en el área principal.
+*   **Temporada Global**: El estado `selectedSeason` se maneja en `App.tsx` y se comparte con todos los componentes para mantener la consistencia al navegar entre pestañas.
+*   **Selección de Equipo**: Al hacer clic en un equipo en la vista de lista, se actualiza `selectedTeam` y se cambia automáticamente a la vista `equipo-detalle`.
 
 ---
 
-## 3. Integración con la API (Capa Base)
+## 3. Estructura de Archivos (Catálogo)
 
-### 3.1 ApiService (`services/api/api.service.ts`)
-Es el motor de comunicación del proyecto. No se deben usar `fetch` o `axios` directamente en los componentes.
-- `getAsync<T>`: Maneja peticiones GET y tipado automático de respuesta.
-- `postAsync<T, D>`: Maneja peticiones POST enviando un body `D`.
-- `deleteAsync<T>`: Maneja eliminaciones.
+### 3.1. Páginas (`/src/pages`)
+*   `Login.tsx`: Gestión de acceso y protección de rutas.
+*   `Temporada.tsx`: Dashboard principal con tabla general, goleadores y sistema de jornadas.
+*   `Equipos.tsx`: Buscador y listado financiero de todos los equipos.
+*   `EquipoDetalle.tsx`: Ficha profunda de un equipo (Plantilla + Transacciones).
+*   `Jugadores.tsx`: Buscador global de jugadores con paginación.
+*   `Transferencias.tsx`: Panel de gestión de ofertas y mercado.
+*   `Noticias.tsx`: Feed de noticias y anuncios oficiales.
+*   `Configuracion.tsx`: Ajustes de usuario y cierre de sesión.
 
-### 3.2 Seguridad y Headers
-Se inyectan automáticamente en cada llamada mediante `getAuthHeaders()`:
-- `token`: Desde `localStorage`.
-- `usuario`: Nombre de usuario activo.
-- `version`: Por defecto "3.0".
-- `tipo-app`: Identificador "app".
+### 3.2. Componentes de Negocio (`/src/components`)
+*   `MatchDetailModal.tsx`: Edición de resultados, estadísticas de partido y evidencias.
+*   `PlayerProfileModal.tsx`: Ficha técnica de jugadores.
+*   `CreateNoticiaModal.tsx`: Editor de publicaciones para administradores.
+*   `Sidebar.tsx`: Navegación principal y selector de Temporada Global.
+
+### 3.3. Capa de Servicios (`/src/services`)
+Centralizan la comunicación con la API.
+*   `api/api.service.ts`: Wrapper genérico de Fetch. Implementa `getAsync`, `postAsync` y `deleteAsync`.
+*   `api/api.endpoints.ts`: Configuración única de URLs.
+*   `auth.ts`, `jornadas.ts`, `equipos.ts`, `jugadores.ts`, `noticias.ts`, `transferencias.ts`: Métodos específicos por módulo.
+
+### 3.4. Sistema de Tipos (`/src/types`)
+Define el contrato de datos para evitar errores de inconsistencia.
+*   `auth.types.ts` / `user.types.ts`: Gestión de sesión y usuario.
+*   `jornadas.types.ts`: Modelos de partidos y estadísticas de juego.
+*   `player.types.ts` / `player-dto.types.ts`: Perfiles y transferencia de jugadores.
+*   `temporada.types.ts`: Clasificaciones y goleadores.
+*   `transferencias.types.ts`: Mercado de fichajes.
+*   `noticias.types.ts`: Estructura de publicaciones.
+*   `financial.types.ts`: Modelos de ingresos y gastos.
+
+---
+
+## 4. Diccionario de Interfaces y Tipos Clave
+
+Para entender el flujo de datos, es vital conocer los contratos definidos en `/src/types`:
+
+### 4.1. Autenticación y Usuario (`auth.types.ts` / `user.types.ts`)
+*   **`UserSession`**: Objeto central del usuario autenticado. Contiene el `token`, el rol de `administrador` y el objeto del equipo asignado.
+*   **`Equipo`**: Representa la entidad del club. Incluye presupuestos, ingresos, gastos y la URL del escudo.
+
+### 4.2. Jornadas y Encuentros (`jornadas.types.ts`)
+*   **`Encuentro`**: El modelo del partido. Contiene marcadores, estados (`cerrado`, `completado`) y referencias a los equipos.
+*   **`EstadisticaJugadorSaveDto`**: Data Transfer Object para enviar los goles, amarillas, rojas y lesiones capturadas en el modal hacia la API.
+*   **`PrmEncuentroEstadisticas`**: El "payload" final de guardado que agrupa el marcador global y el detalle por jugador.
+
+### 4.3. Temporada y Rendimiento (`temporada.types.ts`)
+*   **`TemporadaData`**: El objeto que alimenta la vista general. Contiene la `tabla` de posiciones, la lista de `goleadores` y los `mejoresEquipos`.
+*   **`EquipoTabla`**: Fila individual de la clasificación con registros de PJ, PG, PE, PP, DG y Puntos.
+
+### 4.4. Mercado y Finanzas (`transferencias.types.ts` / `financial.types.ts`)
+*   **`Oferta`**: Define una propuesta económica por un jugador, incluyendo el monto, el equipo de origen/destino y el estado de la negociación.
+*   **`Transaccion`**: Modelo para registrar ingresos o gastos específicos de un equipo.
 
 ---
 
-## 4. Estado y Sincronización
+## 5. Lógica de Implementación Detallada
 
-### 4.1 React Query (TanStack Query)
-- **Caching**: Los datos se mantienen frescos mediante `staleTime`.
-- **Refetch**: El sistema refresca los datos automáticamente al reenfocar la ventana o recuperar conexión.
+### 5.1. Patrón de Consumo de API
+El `ApiService` detecta automáticamente el contexto del usuario. Cuando se llama a una función con `requiresAuth: true`, inyecta en los headers el `token` y el identificaor de `usuario` guardados en el navegador.
 
-### 4.2 Debouncing
-Estrategia crítica en `Jugadores.tsx`:
-1. El usuario escribe.
-2. Un `useEffect` espera 500ms.
-3. Se actualiza el `debouncedSearchTerm`.
-4. React Query detecta el cambio de parámetro y dispara la petición.
+### 5.2. Robustez de Datos (Parsing)
+Debido a la naturaleza flexible de la API, se utiliza un patrón de extracción en los componentes:
+```typescript
+const data = responseData;
+const list = data?.lstDatos || data?.datos || (Array.isArray(data) ? data : []);
+```
+Esto asegura que si el backend devuelve una lista envuelta en un objeto o de forma plana, la UI no se rompa.
+
+### 5.3. Gestión de Estado con React Query (Caché)
+Se utilizan `queryKeys` descriptivas para permitir la invalidación de datos. Por ejemplo, al guardar un resultado, invalidamos `["encuentros"]` para que la tabla y las jornadas se refresquen solas.
+
+---
+
+## 6. Guía de Desarrollo de Nuevas Features
+
+### Paso 1: Tipado
+Define los contratos de datos primero para asegurar que el componente no tenga errores de "undefined".
+
+### Paso 2: Servicio
+Crea el método en `/src/services`. Recuerda pasar `true` si el endpoint requiere que el usuario esté logueado.
+
+### Paso 3: Vista
+Usa el hook `useQuery` o `useMutation`. Mantén la lógica de negocio en el componente de página y deja que el modal solo se encargue de la captura de datos.
 
 ---
 
-## 5. Glosario de Tipos por Archivo
-- `api.types.ts`: Estructuras de respuesta genéricas (`ApiResponse`).
-- `auth.types.ts`: Modelos de login y credenciales.
-- `user.types.ts`: Estructura de la sesión y contexto global.
-- `player.types.ts`: Modelos base de jugadores.
-- `player-dto.types.ts`: Tipos para envío/recepción de detalles.
-- `temporada.types.ts`: Modelos de competición y tablas.
+## 7. Diseño y Estética
+*   **Colores**: Los que nos dio el poderosisimo agente copilot que se la rifo 
+*   **Layout**: Sistema de Sidebar colapsable con contenido principal en contenedor de alto contraste.
+*   **Modo Oscuro**: Implementado nativamente vía Tailwind (`dark:`).
 
 ---
-*Este manual es la guía definitiva para entender el flujo de datos de EMaster Fuchiboli.*
+
+## 8. Comandos de Operación
+*   Instalación: `npm install`
+*   Desarrollo: `npm run dev`
+*   Compilación: `npm run build`
+
+Esta documentacion mas o menos se encarga de que se sepa el contexto del proyecto , favor de actualizarlo en caso de mejoras 

@@ -1,62 +1,48 @@
-# Guía de Usuario y Documentación de Desarrollo: EMaster Fuchiboli
+# Manual de Usuario - EMasterFuchiboli
 
-Este documento proporciona una visión detallada de cómo utilizar la plataforma y la metodología técnica empleada para su construcción.
+¡Bienvenido a EMasterFuchiboli! Esta guía te ayudará a navegar y utilizar todas las funciones de la aplicación.
 
----
+## 1. Inicio de Sesión
+Para acceder, ingresa tu **Usuario** y **Contraseña**. Una vez dentro, la aplicación recordará tu sesión y tu equipo asignado automáticamente.
 
-## 1. Manual de Uso (Guía del Usuario)
+## 2. Sección de Temporada (Página Principal)
+Aquí puedes ver el estado actual de la liga:
+*   **General**: Revisa la tabla de posiciones con los colores de zona de clasificación y descenso. También verás el top de goleadores y los mejores equipos (ofensiva/defensiva).
+*   **Jornadas**: 
+    *   **Por Jornada**: Selecciona una fecha para ver todos los partidos programados.
+    *   **Pendientes**: Tus partidos que aún no tienen marcador.
+    *   **Jugados**: Tu historial de resultados.
 
-### 1.1 Autenticación y Seguridad
-- **Acceso**: Inicie sesión con su usuario y contraseña. El sistema utiliza cifrado SHA-256 para proteger sus credenciales antes de enviarlas al servidor.
-- **Persistencia**: Una vez conectado, el sistema recordará su sesión. No es necesario re-autenticarse al refrescar la página.
+### 2.1. Cómo registrar un resultado
+1. Busca el partido en la pestaña de **Jornadas**.
+2. Haz clic en el recuadro del partido para abrir el **Modal de Detalle**.
+3. Registra los goles, amarillas (2ª ama), rojas y lesiones de cada jugador.
+4. En la pestaña **Multimedia**, añade los links de las imágenes que sirvan como evidencia del marcador.
+5. Haz clic en **Guardar Resultado**. *Nota: Una vez guardado, el partido se cerrará.*
 
-### 1.2 Sección de Temporada (El Tablero de Control)
-- **Vista General**: Aquí encontrará la tabla de posiciones oficial. Los colores indican:
-  - **Verde**: Zona de clasificación/Champions.
-  - **Azul**: Competencia secundaria.
-  - **Rojo**: Zona crítica/Descenso.
-- **Jornadas**: Utilice los filtros para ver:
-  - **Por Jornada**: Todos los partidos de una fecha específica.
-  - **Pendientes**: Solo los partidos que SU equipo aún no ha reportado.
-  - **Jugados**: El historial de resultados de su equipo.
-- **Reporte de Partidos**: 
-    - Al hacer clic en un encuentro pendiente, podrá registrar los goles, lesiones y expulsiones de cada jugador.
-    - **Registro de Imágenes**: Es obligatorio adjuntar al menos un link de imagen como prueba del resultado.
-    - **Autogoles**: Puede sumarlos al marcador; estos no se asignan a un jugador específico en las estadísticas individuales.
+## 3. Equipos
+En esta sección puedes buscar cualquier equipo de la liga. Al seleccionar uno, verás:
+*   **Detalle**: Información básica y escudo.
+*   **Plantilla**: Conoce a sus jugadores y sus estadísticas.
+*   **Finanzas**: El balance económico del equipo (ingresos y gastos detallados).
 
-### 1.3 Gestión de Equipos y Economía
-- **Listado de Equipos**: Permite auditar la salud financiera de todos los clubes.
-- **Detalle de Equipo**: 
-  - **Plantilla**: Revise medias, potenciales y si un jugador está "bloqueado" (no negociable).
-  - **Finanzas**: Desglose exacto de cada ingreso y gasto (premios, fichajes, sanciones).
+## 4. Jugadores
+Acceso al listado global de jugadores de la liga.
+*   Utiliza el **Buscador** para encontrar jugadores por nombre o posición.
+*   Haz clic en un jugador para ver su **Perfil Completo** y estadísticas históricas.
 
-### 1.4 Mercado de Jugadores
-- **Buscador Inteligente**: Busque por nombre o posición. El sistema espera a que termine de escribir (500ms) para lanzar la búsqueda automáticamente, optimizando el rendimiento.
-- **Ficha Técnica**: Haga clic en cualquier jugador para ver su perfil completo, incluyendo su club actual y valor de cláusula.
+## 5. Transferencias
+Gestiona los movimientos del mercado:
+*   Revisa las ofertas recibidas y enviadas.
+*   Filtra por tipos de transferencia para ver qué jugadores están disponibles para préstamo o venta.
 
----
+## 6. Noticias
+Mantente informado sobre los eventos de la liga:
+*   Lee las últimas publicaciones.
+*   Si tienes permisos, crea nuevas noticias utilizando el botón **Crear Noticia**.
 
-## 2. Documentación de Implementación (Cómo se hizo)
-
-### 2.1 Filosofía de Desarrollo
-La aplicación fue construida bajo un esquema de **Arquitectura de Capas**, separando estrictamente la interfaz de la lógica de datos.
-
-### 2.2 Stack Tecnológico
-- **Core**: React 18 con TypeScript para garantizar robustez y evitar errores de tipado en producción.
-- **Estilos**: Tailwind CSS con un sistema de diseño "Glassmorphism" y modo oscuro dinámico.
-- **Gestión de Estado**: React Query para el manejo de caché asíncrono, asegurando que los datos estén siempre actualizados sin recargas innecesarias.
-- **Iconografía**: Lucide React para una interfaz limpia y moderna.
-
-### 2.3 Capa de Comunicación (Servicios)
-Se implementó un `ApiService` centralizado que actúa como único punto de salida para las peticiones:
-1.  **Seguridad**: Inyecta automáticamente los tokens y headers de seguridad en cada llamada.
-2.  **Validación**: Procesa las respuestas del servidor y gestiona errores de red de forma global.
-3.  **Endpoint Mapping**: Utiliza un objeto estático (`API_ENDPOINTS`) para facilitar el mantenimiento si las rutas del servidor cambian.
-
-### 2.4 Optimización de Interfaz
-- **Debounced Search**: Se implementó una lógica de retraso en las busquedas para no saturar el servidor.
-- **Lazy Loading**: Los componentes y datos se cargan bajo demanda para mejorar la velocidad inicial de carga.
-- **Responsive Design**: La interfaz se adapta automáticamente a pantallas de escritorio y portátiles.
+## 7. Configuración
+Desde aquí puedes cerrar sesión y verificar la versión actual de tu aplicación.
 
 ---
-*Este manual sirve como documento maestro tanto para administradores como para el equipo técnico de EMaster Fuchiboli.*
+*Nota: Si experimentas problemas con la carga de imágenes, asegúrate de que los enlaces sean directos y públicos.*
