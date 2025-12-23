@@ -6,10 +6,12 @@ import { JornadasService } from "../services/jornadas";
 import type { Torneo, TemporadaData, EquipoTabla, Goleador, MejorEquipo, JugadorInfo, EquipoInfo } from "../types/temporada.types";
 import type { Jornada, Encuentro } from "../types/jornadas.types";
 import { useAuth } from "../context/AuthContext";
+import MatchDetailModal from "../components/MatchDetailModal";
 
 interface TemporadaProps {
   idTemporada: number;
 }
+
 
 // Helper para convertir respuesta a array de forma segura
 const toArray = <T,>(data: T[] | T | unknown): T[] => {
@@ -73,6 +75,20 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
   const [viewMode, setViewMode] = useState<'general' | 'jornadas'>('general');
   const [jornadaMode, setJornadaMode] = useState<'jornada' | 'pendientes' | 'jugados'>('jornada');
   const [selectedJornadaId, setSelectedJornadaId] = useState<number | null>(null);
+
+  // Estados para Modal de Detalle de Encuentro
+  const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
+  const [selectedMatchId, setSelectedMatchId] = useState<number | null>(null);
+
+  const handleOpenMatchDetail = (id: number) => {
+    setSelectedMatchId(id);
+    setIsMatchModalOpen(true);
+  };
+
+  const handleCloseMatchDetail = () => {
+    setIsMatchModalOpen(false);
+    setSelectedMatchId(null);
+  };
 
   // Obtener lista de torneos
   const { data: rawTorneos, isLoading: loadingTorneos, error: errorTorneos } = useQuery<Torneo[] | Torneo | unknown>({
@@ -495,7 +511,11 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
               ) : (
                 <div className="flex flex-col gap-3 pb-4 flex-1 overflow-y-auto pr-2">
                   {encuentros.map((encuentro) => (
-                    <div key={encuentro.id} className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all p-4 flex flex-col md:flex-row items-center gap-4 relative overflow-hidden group flex-shrink-0">
+                    <div
+                      key={encuentro.id}
+                      onClick={() => handleOpenMatchDetail(encuentro.id)}
+                      className="bg-white dark:bg-slate-800 rounded-xl border border-blue-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all p-4 flex flex-col md:flex-row items-center gap-4 relative overflow-hidden group flex-shrink-0 cursor-pointer"
+                    >
 
                       {/* Status & Date (Left/Top) */}
                       <div className="w-full md:w-32 flex flex-row md:flex-col justify-between md:justify-center items-center md:items-start gap-2 text-xs text-gray-500 dark:text-gray-400 border-b md:border-b-0 md:border-r border-gray-100 dark:border-slate-700 pb-2 md:pb-0 md:pr-4">
@@ -581,9 +601,9 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
                             <span className="text-blue-500 truncate max-w-[80px] text-right">{encuentro.usuarioPublicacion.nombreUsuario}</span>
                           </div>
                         )}
-                        <button className="flex items-center gap-1 text-sm font-medium text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        <div className="flex items-center gap-1 text-sm font-medium text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           Detalles <ChevronRight size={16} />
-                        </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -618,6 +638,11 @@ export default function Temporada({ idTemporada }: TemporadaProps) {
           </div>
         </div>
       )}
+      <MatchDetailModal
+        isOpen={isMatchModalOpen}
+        idEncuentro={selectedMatchId}
+        onClose={handleCloseMatchDetail}
+      />
     </div>
   );
 }

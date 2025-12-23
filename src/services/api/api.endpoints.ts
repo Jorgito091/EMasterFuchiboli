@@ -49,5 +49,7 @@ export const API_ENDPOINTS = {
         GET_ENCUENTROS: '/api/jornadas/obtener_encuentros', // params: idJornada
         GET_PENDIENTES: '/api/jornadas/obtener_encuentros_pendientes', // params: idTemporada, idTorneo, idEquipo
         GET_JUGADOS: '/api/jornadas/obtener_encuentros_jugados', // params: idTemporada, idTorneo, idEquipo
+        GET_INFO_ENCUENTRO: '/api/jornadas/obtener_informacion_encuentro', // params: idEncuentro
+        SAVE_ENCUENTRO: '/api/jornadas/guardar_encuentro',
     },
 } as const;

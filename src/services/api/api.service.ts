@@ -78,6 +78,7 @@ export const getAsync = async <T>(
 ): Promise<T> => {
     const headers = requiresAuth ? getAuthHeaders() : getBasicHeaders();
 
+    console.log(`[GET] ${endpoint}`);
     const response = await fetch(endpoint, {
         method: 'GET',
         headers: headers as HeadersInit,
